@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf17422321d3e694e8529b469afb59b5, type: 3}
+  m_Name: Green-RoofHomes
+  m_EditorClassIdentifier: 
+  displayName: Green-Roof Homes
+  category: 1
+  icon: {fileID: 5890622158322012802, guid: d140e8d931c43b745aa61679a5a2ca77, type: 3}
+  tileColor: {r: 0.30980393, g: 0.6392157, b: 0.2901961, a: 1}
+  description: Plant-covered roofs keep homes cooler and soak up rainwater. Lasts
+    longer than regular housing.
+  cost: 1100
+  yearlyYield:
+    money: 70
+    eco: 2
+    population: 35
+    happiness: 1
+  lifespanYears: 60
+  prefab: {fileID: 0}

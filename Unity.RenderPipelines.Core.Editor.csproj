@@ -65,8 +65,8 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.0.39f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@38fdc9b96878\Editor\Utilities\TimedScope.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@38fdc9b96878\Editor\Volume\Drawers\BoolParameterDrawer.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@38fdc9b96878\Editor\Utilities\TimedScope.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@38fdc9b96878\Editor\CoreEditorDrawers.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@38fdc9b96878\Editor\Settings\RenderPipelineResourcesEditor.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@38fdc9b96878\Editor\LookDev\LookDevRenderer.cs" />
