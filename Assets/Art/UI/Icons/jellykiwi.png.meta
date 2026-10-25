@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      jellykiwi_0: -8364089391665557017
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
