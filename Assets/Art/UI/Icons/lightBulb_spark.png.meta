@@ -309,7 +309,15 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      lightBulb_spark_0: -6075214383194866783
+      lightBulb_spark_1: -4549025120450222149
+      lightBulb_spark_2: 1189827673746207055
+      lightBulb_spark_3: -922808639961051095
+      lightBulb_spark_4: 6534541036714580190
+      lightBulb_spark_5: 8246272105949635336
+      lightBulb_spark_6: 7044351456373616165
+      lightBulb_spark_7: 1671692219182135391
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

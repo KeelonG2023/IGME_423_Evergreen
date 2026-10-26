@@ -101,8 +101,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.Burst.Editor", "Unity
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.2D.Common.Path.Editor", "Unity.2D.Common.Path.Editor.csproj", "{DDBA4E1E-D587-1AD0-57E4-68B4BE0BFC3D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor", "Assembly-CSharp-Editor.csproj", "{29C764EB-8198-B26E-2C15-3BEC7FF2B4BA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.2D.Common.Editor", "Unity.2D.Common.Editor.csproj", "{1D3E8EF2-5A9B-B54D-68C1-6A9590C32AF6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.Rider.Editor", "Unity.Rider.Editor.csproj", "{13AD5C33-3F01-63F9-C2F0-B55022AAF434}"
@@ -379,10 +377,6 @@ Global
 		{DDBA4E1E-D587-1AD0-57E4-68B4BE0BFC3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DDBA4E1E-D587-1AD0-57E4-68B4BE0BFC3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DDBA4E1E-D587-1AD0-57E4-68B4BE0BFC3D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{29C764EB-8198-B26E-2C15-3BEC7FF2B4BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{29C764EB-8198-B26E-2C15-3BEC7FF2B4BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{29C764EB-8198-B26E-2C15-3BEC7FF2B4BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{29C764EB-8198-B26E-2C15-3BEC7FF2B4BA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1D3E8EF2-5A9B-B54D-68C1-6A9590C32AF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1D3E8EF2-5A9B-B54D-68C1-6A9590C32AF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D3E8EF2-5A9B-B54D-68C1-6A9590C32AF6}.Release|Any CPU.ActiveCfg = Release|Any CPU

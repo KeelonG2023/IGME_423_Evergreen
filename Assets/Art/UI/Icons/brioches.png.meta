@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      brioches_0: 3156306131498982717
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

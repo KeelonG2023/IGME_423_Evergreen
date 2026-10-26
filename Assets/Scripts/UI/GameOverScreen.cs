@@ -6,12 +6,17 @@ using UnityEngine.UI;
 
 namespace Evergreen.UI
 {
-    /// <summary>Shows which meter hit zero, the final readings and how long the city lasted.</summary>
+    /// <summary>
+    /// Shown when ResourceManager raises GameOver. Says which meter hit zero,
+    /// lists the final readings and how many years the city lasted.
+    /// </summary>
     public class GameOverScreen : MonoBehaviour
     {
         [SerializeField] SimulationClock clock;
         [SerializeField] ResourceManager resources;
         [SerializeField] ResourceIcons icons;
+
+        [Tooltip("The panel that gets shown. Keep this component on an always-active object outside it.")]
         [SerializeField] GameObject root;
 
         [Header("Content")]
@@ -29,6 +34,7 @@ namespace Evergreen.UI
         [SerializeField] Button menuButton;
         [Tooltip("Scene loaded by the Menu button. Leave empty to hide the button.")]
         [SerializeField] string mainMenuScene = "";
+        [Tooltip("Shown as 'Survived 7 of 20 years'.")]
         [SerializeField] int goalYears = 20;
 
         [Header("Bar scale (value that fills a bar)")]
@@ -36,13 +42,17 @@ namespace Evergreen.UI
         [SerializeField] float ecoFullAt = 100f;
         [SerializeField] float populationFullAt = 3000f;
 
+        // ---------- Unity lifecycle ----------
+
         void Awake()
         {
             if (clock == null) clock = FindFirstObjectByType<SimulationClock>();
             if (resources == null) resources = FindFirstObjectByType<ResourceManager>();
-            // Keep this component on an always-active object; only `root` is toggled.
             if (root == null) root = gameObject;
+
             if (resources != null) resources.GameOver += Show;
+
+            // Only hide the panel if it's a separate object; hiding ourselves would stop us hearing GameOver.
             if (root != gameObject) root.SetActive(false);
         }
 
@@ -53,58 +63,77 @@ namespace Evergreen.UI
 
         void Start()
         {
-            if (playAgainButton != null) playAgainButton.onClick.AddListener(Restart);
+            if (playAgainButton != null) playAgainButton.onClick.AddListener(RestartScene);
             if (menuButton != null)
             {
-                menuButton.gameObject.SetActive(!string.IsNullOrEmpty(mainMenuScene));
+                bool hasMenuScene = !string.IsNullOrEmpty(mainMenuScene);
+                menuButton.gameObject.SetActive(hasMenuScene);
                 menuButton.onClick.AddListener(() => SceneManager.LoadScene(mainMenuScene));
             }
         }
 
+        // ---------- Showing the screen ----------
+
         public void Show(GameOverReason reason)
         {
             root.SetActive(true);
-            root.transform.SetAsLastSibling();
+            root.transform.SetAsLastSibling(); // Draw on top of the rest of the HUD.
 
-            bool money = (reason & GameOverReason.Bankrupt) != 0;
-            bool eco = (reason & GameOverReason.EcoCollapse) != 0;
-            bool pop = (reason & GameOverReason.Depopulated) != 0;
+            bool wentBankrupt = (reason & GameOverReason.Bankrupt) != 0;
+            bool ecoCollapsed = (reason & GameOverReason.EcoCollapse) != 0;
+            bool depopulated = (reason & GameOverReason.Depopulated) != 0;
 
-            var names = new List<string>();
-            if (money) names.Add("Money");
-            if (eco) names.Add("Eco");
-            if (pop) names.Add("Population");
-            if (titleText != null) titleText.text = string.Join(" & ", names) + " hit zero!";
+            // Title, e.g. "Money & Eco hit zero!"
+            var failedResourceNames = new List<string>();
+            if (wentBankrupt) failedResourceNames.Add("Money");
+            if (ecoCollapsed) failedResourceNames.Add("Eco");
+            if (depopulated) failedResourceNames.Add("Population");
+            if (titleText != null) titleText.text = string.Join(" & ", failedResourceNames) + " hit zero!";
 
-            int year = clock != null ? clock.CurrentYear : 0;
-            string cause = eco ? "The environment collapsed" : money ? "The city went bankrupt" : "Everyone moved away";
-            if (subtitleText != null) subtitleText.text = $"{cause} in Year {year}.";
+            // If several failed at once, eco wins, then money, for the subtitle and icon.
+            int finalYear = clock != null ? clock.CurrentYear : 0;
+            string cause = ecoCollapsed ? "The environment collapsed"
+                : wentBankrupt ? "The city went bankrupt"
+                : "Everyone moved away";
+            if (subtitleText != null) subtitleText.text = $"{cause} in Year {finalYear}.";
 
             if (reasonIcon != null && icons != null)
-                reasonIcon.sprite = eco ? icons.eco : money ? icons.money : icons.population;
+                reasonIcon.sprite = ecoCollapsed ? icons.eco : wentBankrupt ? icons.money : icons.population;
 
-            int survived = clock != null ? clock.YearsElapsed : 0;
+            int yearsSurvived = clock != null ? clock.YearsElapsed : 0;
             if (survivedText != null)
-                survivedText.text = $"Survived <color=#9BE15D><size=24>{survived}</size></color> of {goalYears} years";
+                survivedText.text = $"Survived <color=#9BE15D><size=24>{yearsSurvived}</size></color> of {goalYears} years";
 
-            if (resources != null)
-            {
-                if (moneyRow != null) moneyRow.Set($"${Mathf.FloorToInt(resources.Money):N0}", resources.Money / moneyFullAt, money);
-                if (ecoRow != null) ecoRow.Set($"{Mathf.FloorToInt(resources.Eco):N0}", resources.Eco / ecoFullAt, eco);
-                if (populationRow != null) populationRow.Set($"{Mathf.FloorToInt(resources.Population):N0}", resources.Population / populationFullAt, pop);
-                if (happinessRow != null) happinessRow.Set($"{Mathf.RoundToInt(resources.Happiness)}%", resources.Happiness / 100f, false);
-            }
+            FillMeterRows(wentBankrupt, ecoCollapsed, depopulated);
         }
 
-        static void Restart()
+        void FillMeterRows(bool wentBankrupt, bool ecoCollapsed, bool depopulated)
         {
-            Scene scene = SceneManager.GetActiveScene();
+            if (resources == null) return;
+
+            if (moneyRow != null)
+                moneyRow.Set($"${Mathf.FloorToInt(resources.Money):N0}", resources.Money / moneyFullAt, wentBankrupt);
+            if (ecoRow != null)
+                ecoRow.Set($"{Mathf.FloorToInt(resources.Eco):N0}", resources.Eco / ecoFullAt, ecoCollapsed);
+            if (populationRow != null)
+                populationRow.Set($"{Mathf.FloorToInt(resources.Population):N0}", resources.Population / populationFullAt, depopulated);
+
+            // Happiness can't cause a game over, so it's never marked failed.
+            if (happinessRow != null)
+                happinessRow.Set($"{Mathf.RoundToInt(resources.Happiness)}%", resources.Happiness / 100f, false);
+        }
+
+        // ---------- Buttons ----------
+
+        static void RestartScene()
+        {
+            Scene currentScene = SceneManager.GetActiveScene();
 #if UNITY_EDITOR
             // Works in the editor even if the scene isn't in the build scene list.
             UnityEditor.SceneManagement.EditorSceneManager.LoadSceneInPlayMode(
-                scene.path, new LoadSceneParameters(LoadSceneMode.Single));
+                currentScene.path, new LoadSceneParameters(LoadSceneMode.Single));
 #else
-            SceneManager.LoadScene(scene.buildIndex);
+            SceneManager.LoadScene(currentScene.buildIndex);
 #endif
         }
     }

@@ -178,12 +178,12 @@ MonoBehaviour:
   background: {fileID: 32825975}
   failOutline: {fileID: 32825974}
   icon: {fileID: 324213302}
-  label: {fileID: 1112640283}
-  fill: {fileID: 1651888470}
-  fillImage: {fileID: 1651888471}
+  labelText: {fileID: 1112640283}
+  fillBar: {fileID: 1651888470}
+  fillBarImage: {fileID: 1651888471}
   track: {fileID: 1533064516}
-  value: {fileID: 1619409599}
   meterColor: {r: 0.60784316, g: 0.88235295, b: 0.3647059, a: 1}
+  valueText: {fileID: 1619409599}
 --- !u!114 &32825973
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -752,8 +752,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   valueText: {fileID: 357446041}
-  deltaText: {fileID: 859701670}
-  fill: {fileID: 951213050}
+  perYearChangeText: {fileID: 859701670}
+  fillBar: {fileID: 951213050}
 --- !u!114 &155929661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2008,12 +2008,12 @@ MonoBehaviour:
   background: {fileID: 390188349}
   failOutline: {fileID: 390188348}
   icon: {fileID: 352513649}
-  label: {fileID: 1071189292}
-  fill: {fileID: 597543899}
-  fillImage: {fileID: 597543900}
+  labelText: {fileID: 1071189292}
+  fillBar: {fileID: 597543899}
+  fillBarImage: {fileID: 597543900}
   track: {fileID: 1841584346}
-  value: {fileID: 1289536955}
   meterColor: {r: 0.36078432, g: 0.78431374, b: 1, a: 1}
+  valueText: {fileID: 1289536955}
 --- !u!114 &390188347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2980,8 +2980,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   valueText: {fileID: 2146942276}
-  deltaText: {fileID: 2052252122}
-  fill: {fileID: 0}
+  perYearChangeText: {fileID: 2052252122}
+  fillBar: {fileID: 0}
 --- !u!114 &512832613
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3540,6 +3540,7 @@ MonoBehaviour:
   eco: {fileID: 512832612}
   population: {fileID: 1639738942}
   happiness: {fileID: 155929660}
+  showTooltips: 1
 --- !u!114 &600504073
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4486,8 +4487,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   valueText: {fileID: 1720231444}
-  deltaText: {fileID: 681545273}
-  fill: {fileID: 0}
+  perYearChangeText: {fileID: 681545273}
+  fillBar: {fileID: 0}
 --- !u!114 &772989009
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5989,7 +5990,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 44922786aace39542a7984b4622fbbd9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 86cfd7820e84b2c489042aedf65e87ef, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -6062,29 +6063,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8abe8ce445ddbae46a0114db00b4594c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  button: {fileID: 1178016509}
+  headerButton: {fileID: 1178016509}
   icon: {fileID: 2000380192}
   nameText: {fileID: 2079236027}
   costText: {fileID: 1207937357}
-  costPill: {fileID: 1022370314}
+  costPillBackground: {fileID: 1022370314}
   lifespanText: {fileID: 1407913211}
   lockedOverlay: {fileID: 1248236111}
   chevron: {fileID: 1547924291}
   selectedOutline: {fileID: 951917725}
   chipRow: {fileID: 231659333}
   chipTemplate: {fileID: 1232842594}
-  details: {fileID: 1244776475}
+  detailsPanel: {fileID: 1244776475}
   descriptionText: {fileID: 814878387}
   moneyTile: {fileID: 1515458979}
   ecoTile: {fileID: 1289864776}
   populationTile: {fileID: 1794626679}
   happinessTile: {fileID: 354243600}
-  lifetimeHeader: {fileID: 332106811}
-  lifetimeTotals: {fileID: 1804010088}
+  lifetimeHeaderText: {fileID: 332106811}
+  lifetimeTotalsText: {fileID: 1804010088}
   paybackText: {fileID: 1044204093}
   placeButton: {fileID: 1864778997}
-  placeBackground: {fileID: 1864779000}
-  placeLabel: {fileID: 462186250}
+  placeButtonBackground: {fileID: 1864779000}
+  placeButtonLabel: {fileID: 462186250}
 --- !u!114 &951917724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9917,12 +9918,13 @@ MonoBehaviour:
     category: 3
     layout: {fileID: 2048965425}
     activeIndicator: {fileID: 725776323}
-  tabActive: {r: 0.08235294, g: 0.101960786, b: 0.09803922, a: 1}
-  tabActiveLabel: {r: 0.60784316, g: 0.88235295, b: 0.3647059, a: 1}
-  tabInactive: {r: 0.16862746, g: 0.2, b: 0.1882353, a: 1}
-  tabInactiveLabel: {r: 0.7882353, g: 0.8235294, b: 0.80784315, a: 1}
+  activeTabColor: {r: 0.08235294, g: 0.101960786, b: 0.09803922, a: 1}
+  activeTabLabelColor: {r: 0.60784316, g: 0.88235295, b: 0.3647059, a: 1}
+  inactiveTabColor: {r: 0.16862746, g: 0.2, b: 0.1882353, a: 1}
+  inactiveTabLabelColor: {r: 0.7882353, g: 0.8235294, b: 0.80784315, a: 1}
   activeTabHeight: 89.78016
   inactiveTabHeight: 78.0697
+  addCollapseButton: 1
 --- !u!114 &1441328212
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10271,7 +10273,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 44922786aace39542a7984b4622fbbd9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 86cfd7820e84b2c489042aedf65e87ef, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -10687,12 +10689,12 @@ MonoBehaviour:
   background: {fileID: 1513168854}
   failOutline: {fileID: 1513168853}
   icon: {fileID: 1248115010}
-  label: {fileID: 1785692808}
-  fill: {fileID: 1789766610}
-  fillImage: {fileID: 1789766611}
+  labelText: {fileID: 1785692808}
+  fillBar: {fileID: 1789766610}
+  fillBarImage: {fileID: 1789766611}
   track: {fileID: 309373152}
-  value: {fileID: 419898760}
   meterColor: {r: 1, g: 0.47843137, b: 0.65882355, a: 1}
+  valueText: {fileID: 419898760}
 --- !u!114 &1513168852
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11617,8 +11619,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   valueText: {fileID: 473704171}
-  deltaText: {fileID: 786368323}
-  fill: {fileID: 0}
+  perYearChangeText: {fileID: 786368323}
+  fillBar: {fileID: 0}
 --- !u!114 &1639738943
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13307,7 +13309,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 1766, y: 948}
+  m_AnchoredPosition: {x: 1766, y: 992}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1845672726
@@ -13324,9 +13326,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   clock: {fileID: 1229605240}
   pauseButton: {fileID: 736078482}
-  speed1Button: {fileID: 2127853240}
-  speed2Button: {fileID: 634157349}
-  speed3Button: {fileID: 1652601101}
+  normalSpeedButton: {fileID: 2127853240}
+  fastSpeedButton: {fileID: 634157349}
+  fastestSpeedButton: {fileID: 1652601101}
   activeColor: {r: 0.608, g: 0.882, b: 0.365, a: 1}
   activeLabelColor: {r: 0.11, g: 0.227, b: 0.031, a: 1}
   inactiveColor: {r: 0.22, g: 0.25, b: 0.24, a: 1}
@@ -13503,7 +13505,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 44922786aace39542a7984b4622fbbd9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 86cfd7820e84b2c489042aedf65e87ef, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -14063,12 +14065,12 @@ MonoBehaviour:
   background: {fileID: 1957353014}
   failOutline: {fileID: 1957353013}
   icon: {fileID: 1800568325}
-  label: {fileID: 959681125}
-  fill: {fileID: 1144689000}
-  fillImage: {fileID: 1144689001}
+  labelText: {fileID: 959681125}
+  fillBar: {fileID: 1144689000}
+  fillBarImage: {fileID: 1144689001}
   track: {fileID: 527570063}
-  value: {fileID: 1337172002}
   meterColor: {r: 1, g: 0.70980394, b: 0.2784314, a: 1}
+  valueText: {fileID: 1337172002}
 --- !u!114 &1957353012
 MonoBehaviour:
   m_ObjectHideFlags: 0

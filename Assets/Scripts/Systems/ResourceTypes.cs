@@ -2,13 +2,17 @@ using System;
 
 namespace Evergreen.Systems
 {
-    /// <summary>A bundle of the simulated resources. Used for yields, deltas and totals.</summary>
+    /// <summary>
+    /// A bundle of the four simulated resources. The same struct is used for three jobs:
+    /// a building's yearly yield, a one-off change (like a disaster), and the city's totals.
+    /// </summary>
     [Serializable]
     public struct ResourceYield
     {
         public float money;
         public float eco;
         public float population;
+
         [UnityEngine.Tooltip("Percentage points. Happiness is clamped to 0-100 and is not a fail state.")]
         public float happiness;
 
@@ -20,16 +24,32 @@ namespace Evergreen.Systems
             this.happiness = happiness;
         }
 
+        /// <summary>All four resources set to zero.</summary>
         public static ResourceYield Zero => default;
 
-        public static ResourceYield operator +(ResourceYield a, ResourceYield b) =>
-            new ResourceYield(a.money + b.money, a.eco + b.eco, a.population + b.population, a.happiness + b.happiness);
+        // Math operators so yields can be added up and scaled like plain numbers,
+        // e.g. "yearlyNet * (1f / ticksPerYear)".
 
-        public static ResourceYield operator -(ResourceYield a, ResourceYield b) =>
-            new ResourceYield(a.money - b.money, a.eco - b.eco, a.population - b.population, a.happiness - b.happiness);
+        public static ResourceYield operator +(ResourceYield left, ResourceYield right) =>
+            new ResourceYield(
+                left.money + right.money,
+                left.eco + right.eco,
+                left.population + right.population,
+                left.happiness + right.happiness);
 
-        public static ResourceYield operator *(ResourceYield a, float s) =>
-            new ResourceYield(a.money * s, a.eco * s, a.population * s, a.happiness * s);
+        public static ResourceYield operator -(ResourceYield left, ResourceYield right) =>
+            new ResourceYield(
+                left.money - right.money,
+                left.eco - right.eco,
+                left.population - right.population,
+                left.happiness - right.happiness);
+
+        public static ResourceYield operator *(ResourceYield yield, float scale) =>
+            new ResourceYield(
+                yield.money * scale,
+                yield.eco * scale,
+                yield.population * scale,
+                yield.happiness * scale);
 
         public override string ToString() =>
             $"Money {money:0.##}, Eco {eco:0.##}, Pop {population:0.##}, Happy {happiness:0.##}%";
@@ -45,6 +65,7 @@ namespace Evergreen.Systems
         ResourceYield YearlyYield { get; }
     }
 
+    /// <summary>Build menu tabs. Every BuildingDefinition belongs to exactly one.</summary>
     public enum BuildingCategory
     {
         Energy,
@@ -53,6 +74,10 @@ namespace Evergreen.Systems
         Services
     }
 
+    /// <summary>
+    /// Why the game ended. It's a set of flags because more than one resource
+    /// can hit zero on the same tick (e.g. Bankrupt | EcoCollapse).
+    /// </summary>
     [Flags]
     public enum GameOverReason
     {

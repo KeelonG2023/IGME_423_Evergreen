@@ -9,26 +9,30 @@ namespace Evergreen.Systems
     /// every registered IYieldSource and applies them. If money, eco or population
     /// reaches zero, it halts the clock and raises GameOver.
     /// </summary>
-    [DefaultExecutionOrder(-90)]
+    [DefaultExecutionOrder(-90)] // After the clock, before buildings and UI.
     public class ResourceManager : MonoBehaviour
     {
         public static ResourceManager Instance { get; private set; }
 
+        // ---------- Yield source registry ----------
+
         // Static so buildings can register even if they enable before the manager exists.
-        static readonly List<IYieldSource> sources = new List<IYieldSource>();
-        public static IReadOnlyList<IYieldSource> Sources => sources;
+        static readonly List<IYieldSource> registeredSources = new List<IYieldSource>();
+        public static IReadOnlyList<IYieldSource> Sources => registeredSources;
 
         public static void Register(IYieldSource source)
         {
-            if (source != null && !sources.Contains(source))
-                sources.Add(source);
+            if (source != null && !registeredSources.Contains(source))
+                registeredSources.Add(source);
         }
 
-        public static void Unregister(IYieldSource source) => sources.Remove(source);
+        public static void Unregister(IYieldSource source) => registeredSources.Remove(source);
 
         // Clear between play sessions when domain reload is disabled.
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        static void ResetStatics() => sources.Clear();
+        static void ResetStatics() => registeredSources.Clear();
+
+        // ---------- Inspector ----------
 
         [SerializeField] SimulationClock clock;
 
@@ -37,6 +41,8 @@ namespace Evergreen.Systems
         [SerializeField] float startingEco = 50f;
         [SerializeField] float startingPopulation = 100f;
         [SerializeField, Range(0f, 100f)] float startingHappiness = 60f;
+
+        // ---------- Current values ----------
 
         public float Money { get; private set; }
         public float Eco { get; private set; }
@@ -53,11 +59,15 @@ namespace Evergreen.Systems
         public bool IsGameOver { get; private set; }
         public GameOverReason GameOverReason { get; private set; }
 
+        // ---------- Events ----------
+
         /// <summary>Fires whenever any resource value changes.</summary>
         public event Action<ResourceManager> ResourcesChanged;
 
         /// <summary>Fires once, when money, eco or population hits zero.</summary>
         public event Action<GameOverReason> GameOver;
+
+        // ---------- Unity lifecycle ----------
 
         void Awake()
         {
@@ -96,33 +106,43 @@ namespace Evergreen.Systems
                 Instance = null;
         }
 
+        // Lets the HUD draw the starting values before the first tick.
         void Start() => ResourcesChanged?.Invoke(this);
+
+        // ---------- Simulation ----------
 
         /// <summary>Sum of every building's yearly yield, i.e. the city's projected net per year.</summary>
         public ResourceYield GetYearlyNet()
         {
             ResourceYield total = ResourceYield.Zero;
-            for (int i = sources.Count - 1; i >= 0; i--)
+
+            // Walk backwards so dead entries can be removed mid-loop.
+            for (int index = registeredSources.Count - 1; index >= 0; index--)
             {
-                IYieldSource source = sources[i];
-                if (source == null || (source is UnityEngine.Object obj && obj == null))
+                IYieldSource source = registeredSources[index];
+
+                // A destroyed Unity object isn't C# null, so it needs the "== null" check on UnityEngine.Object.
+                bool sourceWasDestroyed = source == null || (source is UnityEngine.Object unityObject && unityObject == null);
+                if (sourceWasDestroyed)
                 {
-                    sources.RemoveAt(i); // destroyed without unregistering
+                    registeredSources.RemoveAt(index);
                     continue;
                 }
+
                 total += source.YearlyYield;
             }
             return total;
         }
 
-        void OnTick(SimulationClock c)
+        void OnTick(SimulationClock tickingClock)
         {
             if (IsGameOver)
                 return;
 
-            ResourceYield delta = GetYearlyNet() * (1f / c.TicksPerYear);
-            LastTickDelta = delta;
-            Apply(delta);
+            // Yields are per year, so each tick applies its share of the year.
+            ResourceYield deltaThisTick = GetYearlyNet() * (1f / tickingClock.TicksPerYear);
+            LastTickDelta = deltaThisTick;
+            Apply(deltaThisTick);
         }
 
         void Apply(ResourceYield delta)
@@ -161,6 +181,8 @@ namespace Evergreen.Systems
             return true;
         }
 
+        // ---------- Game over ----------
+
         void CheckForGameOver()
         {
             GameOverReason reason = GameOverReason.None;
@@ -171,6 +193,7 @@ namespace Evergreen.Systems
             if (reason == GameOverReason.None)
                 return;
 
+            // Don't show negative numbers on the game-over screen.
             Money = Mathf.Max(0f, Money);
             Eco = Mathf.Max(0f, Eco);
             Population = Mathf.Max(0f, Population);

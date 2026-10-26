@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 namespace Evergreen.Systems
 {
-    /// <summary>Space = pause/resume, 1/2/3 = speed.</summary>
+    /// <summary>Keyboard shortcuts for the clock: Space = pause/resume, 1/2/3 = speed.</summary>
     public class SimulationHotkeys : MonoBehaviour
     {
         [SerializeField] SimulationClock clock;
@@ -16,14 +16,20 @@ namespace Evergreen.Systems
 
         void Update()
         {
-            Keyboard kb = Keyboard.current;
-            if (kb == null || clock == null)
+            Keyboard keyboard = Keyboard.current;
+            if (keyboard == null || clock == null)
                 return;
 
-            if (kb.spaceKey.wasPressedThisFrame) clock.TogglePause();
-            if (kb.digit1Key.wasPressedThisFrame || kb.numpad1Key.wasPressedThisFrame) clock.SetSpeed(GameSpeed.Normal);
-            if (kb.digit2Key.wasPressedThisFrame || kb.numpad2Key.wasPressedThisFrame) clock.SetSpeed(GameSpeed.Fast);
-            if (kb.digit3Key.wasPressedThisFrame || kb.numpad3Key.wasPressedThisFrame) clock.SetSpeed(GameSpeed.Fastest);
+            if (keyboard.spaceKey.wasPressedThisFrame)
+                clock.TogglePause();
+
+            // Number row and numpad both work.
+            if (keyboard.digit1Key.wasPressedThisFrame || keyboard.numpad1Key.wasPressedThisFrame)
+                clock.SetSpeed(GameSpeed.Normal);
+            if (keyboard.digit2Key.wasPressedThisFrame || keyboard.numpad2Key.wasPressedThisFrame)
+                clock.SetSpeed(GameSpeed.Fast);
+            if (keyboard.digit3Key.wasPressedThisFrame || keyboard.numpad3Key.wasPressedThisFrame)
+                clock.SetSpeed(GameSpeed.Fastest);
         }
     }
 }

@@ -72,12 +72,15 @@
     <Compile Include="Assets\Scripts\Systems\BuildingYield.cs" />
     <Compile Include="Assets\Scripts\Systems\ResourceTypes.cs" />
     <Compile Include="Assets\Scripts\UI\YieldTile.cs" />
+    <Compile Include="Assets\Scripts\UI\ResourceTooltip.cs" />
     <Compile Include="Assets\Scripts\UI\ResourceIcons.cs" />
     <Compile Include="Assets\Scripts\UI\BuildMenu.cs" />
     <Compile Include="Assets\Scripts\UI\SpeedControls.cs" />
     <Compile Include="Assets\Scripts\UI\ArcadePalette.cs" />
     <Compile Include="Assets\Scripts\UI\BuildingClickSelector.cs" />
+    <Compile Include="Assets\Scripts\UI\BuildPanelToggle.cs" />
     <Compile Include="Assets\Scripts\UI\BuildingTooltip.cs" />
+    <Compile Include="Assets\Scripts\UI\ResourceHoverTarget.cs" />
     <Compile Include="Assets\Scripts\Systems\SimulationHotkeys.cs" />
     <Compile Include="Assets\Scripts\UI\MeterWidget.cs" />
     <Compile Include="Assets\Scripts\Systems\BuildingDefinition.cs" />

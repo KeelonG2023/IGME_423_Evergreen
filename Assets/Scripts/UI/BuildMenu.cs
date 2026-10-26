@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Evergreen.Systems;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Evergreen.UI
@@ -14,87 +15,124 @@ namespace Evergreen.UI
     /// </summary>
     public class BuildMenu : MonoBehaviour
     {
+        /// <summary>One tab along the top of the menu. Filters cards to one category (or shows all).</summary>
         [Serializable]
         public class CategoryTab
         {
             public Button button;
+
+            [Tooltip("If ticked, this tab shows every building and ignores Category.")]
             public bool showsAll;
             public BuildingCategory category;
+
             [Tooltip("Optional. Its height grows when the tab is active (folder-tab look).")]
             public LayoutElement layout;
-            [Tooltip("Optional. Shown only on the active tab (the lime stripe).")]
+
+            [Tooltip("Optional. The old lime stripe along the top of the tab. Always hidden now.")]
             public GameObject activeIndicator;
         }
 
+        /// <summary>How often (seconds) card affordability is re-checked.</summary>
+        const float RefreshInterval = 0.25f;
+
         [SerializeField] ResourceManager resources;
         [SerializeField] ResourceIcons icons;
+
+        [Tooltip("Every building the player can build, in display order.")]
         [SerializeField] List<BuildingDefinition> catalog = new List<BuildingDefinition>();
 
         [Header("Layout")]
+        [Tooltip("Cards are spawned as children of this.")]
         [SerializeField] Transform cardParent;
+        [Tooltip("Hidden card that gets cloned once per building.")]
         [SerializeField] BuildCard cardTemplate;
         [SerializeField] Text moneyText;
         [SerializeField] List<CategoryTab> tabs = new List<CategoryTab>();
 
         [Header("Tab look")]
-        [SerializeField] Color tabActive = new Color(0.082f, 0.102f, 0.098f);
-        [SerializeField] Color tabActiveLabel = new Color(0.608f, 0.882f, 0.365f);
-        [SerializeField] Color tabInactive = new Color(0.169f, 0.2f, 0.188f);
-        [SerializeField] Color tabInactiveLabel = new Color(0.788f, 0.824f, 0.808f);
+        [FormerlySerializedAs("tabActive")]
+        [SerializeField] Color activeTabColor = new Color(0.082f, 0.102f, 0.098f);
+        [FormerlySerializedAs("tabActiveLabel")]
+        [SerializeField] Color activeTabLabelColor = new Color(0.608f, 0.882f, 0.365f);
+        [FormerlySerializedAs("tabInactive")]
+        [SerializeField] Color inactiveTabColor = new Color(0.169f, 0.2f, 0.188f);
+        [FormerlySerializedAs("tabInactiveLabel")]
+        [SerializeField] Color inactiveTabLabelColor = new Color(0.788f, 0.824f, 0.808f);
         [SerializeField] float activeTabHeight = 46f;
         [SerializeField] float inactiveTabHeight = 40f;
+
+        [Header("Collapse")]
+        [Tooltip("Adds a tab on the panel's left edge that slides the panel off screen and back.")]
+        [SerializeField] bool addCollapseButton = true;
 
         /// <summary>Raised with the definition when the player presses Place, or null when cleared.</summary>
         public event Action<BuildingDefinition> StructureSelected;
 
+        /// <summary>The building the player chose to place, or null.</summary>
         public BuildingDefinition Selected { get; private set; }
         public IReadOnlyList<BuildingDefinition> Catalog => catalog;
 
         readonly List<BuildCard> cards = new List<BuildCard>();
         CategoryTab activeTab;
-        float refreshTimer;
+        float secondsUntilRefresh;
+
+        // ---------- Unity lifecycle ----------
 
         void Awake()
         {
             if (resources == null) resources = FindFirstObjectByType<ResourceManager>();
+
+            if (addCollapseButton && GetComponent<BuildPanelToggle>() == null)
+                gameObject.AddComponent<BuildPanelToggle>();
         }
 
         void Start()
         {
-            if (cardTemplate != null) cardTemplate.gameObject.SetActive(false);
-
-            foreach (BuildingDefinition def in catalog)
-            {
-                if (def == null || cardTemplate == null) continue;
-                BuildCard card = Instantiate(cardTemplate, cardParent);
-                card.name = "Card - " + def.displayName;
-                card.gameObject.SetActive(true);
-                card.Setup(def, icons);
-                if (card.Button != null) card.Button.onClick.AddListener(() => ToggleCard(card));
-                if (card.PlaceButton != null) card.PlaceButton.onClick.AddListener(() => PlaceCard(card));
-                cards.Add(card);
-            }
+            SpawnCards();
 
             foreach (CategoryTab tab in tabs)
             {
-                CategoryTab t = tab;
-                if (t.button != null) t.button.onClick.AddListener(() => SelectTab(t));
+                CategoryTab clickedTab = tab; // Local copy so each lambda captures its own tab.
+                if (clickedTab.button != null) clickedTab.button.onClick.AddListener(() => SelectTab(clickedTab));
             }
+
             SelectTab(tabs.Count > 0 ? tabs[0] : null);
-            Refresh();
+            RefreshAffordability();
         }
 
         void Update()
         {
-            refreshTimer -= Time.unscaledDeltaTime;
-            if (refreshTimer <= 0f)
+            // Unscaled so it still updates while the game is paused.
+            secondsUntilRefresh -= Time.unscaledDeltaTime;
+            if (secondsUntilRefresh <= 0f)
             {
-                refreshTimer = 0.25f;
-                Refresh();
+                secondsUntilRefresh = RefreshInterval;
+                RefreshAffordability();
             }
         }
 
-        void Refresh()
+        void SpawnCards()
+        {
+            if (cardTemplate == null) return;
+            cardTemplate.gameObject.SetActive(false);
+
+            foreach (BuildingDefinition building in catalog)
+            {
+                if (building == null) continue;
+
+                BuildCard card = Instantiate(cardTemplate, cardParent);
+                card.name = "Card - " + building.displayName;
+                card.gameObject.SetActive(true);
+                card.Setup(building, icons);
+
+                if (card.HeaderButton != null) card.HeaderButton.onClick.AddListener(() => ToggleCard(card));
+                if (card.PlaceButton != null) card.PlaceButton.onClick.AddListener(() => PlaceCard(card));
+                cards.Add(card);
+            }
+        }
+
+        /// <summary>Updates the money readout and greys out cards the player can't afford.</summary>
+        void RefreshAffordability()
         {
             float money = resources != null ? resources.Money : float.PositiveInfinity;
             if (moneyText != null && resources != null) moneyText.text = $"${Mathf.FloorToInt(money):N0}";
@@ -103,23 +141,30 @@ namespace Evergreen.UI
             {
                 float cost = card.Definition.cost;
                 bool affordable = resources == null || resources.CanAfford(cost);
-                // CanAfford keeps at least $1, so the shortfall is cost - money + 1.
-                card.SetAffordable(affordable, Mathf.Max(0f, cost - money + 1f));
+
+                // CanAfford requires at least $1 left over, so the shortfall is cost - money + 1.
+                float moneyShort = Mathf.Max(0f, cost - money + 1f);
+                card.SetAffordable(affordable, moneyShort);
             }
         }
 
-        void ToggleCard(BuildCard card)
+        // ---------- Card actions ----------
+
+        /// <summary>Opens the clicked card and closes every other one. Clicking an open card closes it.</summary>
+        void ToggleCard(BuildCard clickedCard)
         {
-            Deselect();
-            bool open = !card.IsOpen;
-            foreach (BuildCard c in cards) c.SetOpen(c == card && open);
+            ClearUiFocus();
+            bool shouldOpen = !clickedCard.IsOpen;
+            foreach (BuildCard card in cards)
+                card.SetOpen(card == clickedCard && shouldOpen);
             RebuildLayout();
         }
 
         void PlaceCard(BuildCard card)
         {
-            Deselect();
+            ClearUiFocus();
             if (resources != null && !resources.CanAfford(card.Definition.cost)) return;
+
             Selected = card.Definition;
             StructureSelected?.Invoke(Selected);
         }
@@ -133,42 +178,62 @@ namespace Evergreen.UI
 
         public void CollapseAll()
         {
-            foreach (BuildCard c in cards) c.SetOpen(false);
+            foreach (BuildCard card in cards) card.SetOpen(false);
             RebuildLayout();
         }
 
+        // ---------- Tabs ----------
+
+        /// <summary>Shows only the cards in this tab's category and restyles the tab row.</summary>
         void SelectTab(CategoryTab tab)
         {
-            Deselect();
+            ClearUiFocus();
             activeTab = tab;
+
             foreach (BuildCard card in cards)
             {
-                bool show = tab == null || tab.showsAll || card.Definition.category == tab.category;
-                card.gameObject.SetActive(show);
-                if (!show) card.SetOpen(false);
+                bool belongsToTab = tab == null || tab.showsAll || card.Definition.category == tab.category;
+                card.gameObject.SetActive(belongsToTab);
+                if (!belongsToTab) card.SetOpen(false);
             }
 
-            foreach (CategoryTab t in tabs)
-            {
-                if (t.button == null) continue;
-                bool active = t == activeTab;
-                if (t.button.targetGraphic != null) t.button.targetGraphic.color = active ? tabActive : tabInactive;
-                Text label = t.button.GetComponentInChildren<Text>();
-                if (label != null) label.color = active ? tabActiveLabel : tabInactiveLabel;
-                if (t.layout != null) t.layout.preferredHeight = t.layout.minHeight = active ? activeTabHeight : inactiveTabHeight;
-                if (t.activeIndicator != null) t.activeIndicator.SetActive(active);
-            }
+            foreach (CategoryTab otherTab in tabs)
+                StyleTab(otherTab, otherTab == activeTab);
+
             RebuildLayout();
         }
+
+        void StyleTab(CategoryTab tab, bool isActive)
+        {
+            if (tab.button == null) return;
+
+            if (tab.button.targetGraphic != null)
+                tab.button.targetGraphic.color = isActive ? activeTabColor : inactiveTabColor;
+
+            Text label = tab.button.GetComponentInChildren<Text>();
+            if (label != null) label.color = isActive ? activeTabLabelColor : inactiveTabLabelColor;
+
+            if (tab.layout != null)
+            {
+                float height = isActive ? activeTabHeight : inactiveTabHeight;
+                tab.layout.preferredHeight = height;
+                tab.layout.minHeight = height;
+            }
+
+            // The lime highlight stripe was removed from the design, so keep it hidden on every tab.
+            if (tab.activeIndicator != null) tab.activeIndicator.SetActive(false);
+        }
+
+        // ---------- Helpers ----------
 
         void RebuildLayout()
         {
-            if (cardParent is RectTransform rt) LayoutRebuilder.MarkLayoutForRebuild(rt);
+            if (cardParent is RectTransform cardParentRect) LayoutRebuilder.MarkLayoutForRebuild(cardParentRect);
         }
 
-        static void Deselect()
+        /// <summary>Keeps Space (the pause hotkey) from re-clicking the last pressed button.</summary>
+        static void ClearUiFocus()
         {
-            // Keeps Space (pause hotkey) from re-clicking the last pressed button.
             if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(null);
         }
     }

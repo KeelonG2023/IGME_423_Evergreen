@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      smirking_0: 479662809935480738
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

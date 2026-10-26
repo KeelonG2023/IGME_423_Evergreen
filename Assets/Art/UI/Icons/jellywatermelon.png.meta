@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      jellywatermelon_0: -2971592240683740019
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

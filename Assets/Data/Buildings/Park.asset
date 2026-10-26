@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Park
   category: 2
-  icon: {fileID: -2373015560723259157, guid: b4412411dd893b949bc091f8b537579d, type: 3}
+  icon: {fileID: 8934166159419189772, guid: 8e8ce1fb5a6411948b4f2c80900a400b, type: 3}
   tileColor: {r: 0.24705882, g: 0.5803922, b: 0.2509804, a: 1}
   description: Green space that cleans the air and lifts everyone's mood. Needs a
     little upkeep each year.

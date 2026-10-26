@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Wind Turbine
   category: 0
-  icon: {fileID: 5856981904466133357, guid: 97f92f3a03b51bb4ca1d8e9a6c195321, type: 3}
+  icon: {fileID: 8934166159419189772, guid: 8e8ce1fb5a6411948b4f2c80900a400b, type: 3}
   tileColor: {r: 0.95686275, g: 0.96862745, b: 0.9764706, a: 1}
   description: Clean power from the wind. A little noisy for neighbors, but cheap
     to run once it's up.

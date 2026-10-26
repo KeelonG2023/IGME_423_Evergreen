@@ -10,9 +10,9 @@ namespace Evergreen.UI
         [SerializeField] Text valueText;
         [SerializeField] Text labelText;
 
-        public void Set(Sprite sprite, float perYear, string prefix, string suffix, string label)
+        public void Set(Sprite resourceIcon, float perYear, string prefix, string suffix, string label)
         {
-            if (icon != null) icon.sprite = sprite;
+            if (icon != null) icon.sprite = resourceIcon;
             if (valueText != null)
             {
                 valueText.text = ArcadePalette.Signed(perYear, prefix, suffix);

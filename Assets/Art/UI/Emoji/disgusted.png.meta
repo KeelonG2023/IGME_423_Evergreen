@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      disgusted_0: 534002389781278355
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

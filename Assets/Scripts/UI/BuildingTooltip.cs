@@ -10,6 +10,7 @@ namespace Evergreen.UI
     /// </summary>
     public class BuildingTooltip : MonoBehaviour
     {
+        [Tooltip("The bubble itself. Defaults to this object.")]
         [SerializeField] RectTransform panel;
         [SerializeField] Camera worldCamera;
 
@@ -22,17 +23,22 @@ namespace Evergreen.UI
         [SerializeField] Text populationText;
         [SerializeField] Text happinessText;
         [SerializeField] Text lifespanText;
+        [Tooltip("Bar that shrinks as the building ages.")]
         [SerializeField] RectTransform lifespanFill;
 
         [Header("Positioning")]
         [Tooltip("Gap in canvas pixels between the top of the building and the bubble's arrow.")]
         [SerializeField] float gap = 18f;
+        [Tooltip("Closest the bubble may get to the screen edge, in canvas pixels.")]
         [SerializeField] float screenMargin = 16f;
 
+        /// <summary>The building currently shown, or null when hidden.</summary>
         public BuildingYield Target { get; private set; }
 
         Canvas canvas;
         RectTransform canvasRect;
+
+        // ---------- Unity lifecycle ----------
 
         void Awake()
         {
@@ -43,13 +49,34 @@ namespace Evergreen.UI
             panel.gameObject.SetActive(false);
         }
 
+        void LateUpdate()
+        {
+            // The building was destroyed while the tooltip was open.
+            if (Target == null)
+            {
+                if (panel.gameObject.activeSelf) Hide();
+                return;
+            }
+
+            // Refresh every frame so the lifespan bar ticks down live and the bubble follows the camera.
+            RefreshContent();
+            FollowTarget();
+        }
+
+        // ---------- Public API ----------
+
         public void Show(BuildingYield building)
         {
             Target = building;
-            if (building == null) { Hide(); return; }
+            if (building == null)
+            {
+                Hide();
+                return;
+            }
+
             panel.gameObject.SetActive(true);
-            Refresh();
-            Reposition();
+            RefreshContent();
+            FollowTarget();
         }
 
         public void Hide()
@@ -58,81 +85,105 @@ namespace Evergreen.UI
             if (panel != null) panel.gameObject.SetActive(false);
         }
 
-        void LateUpdate()
-        {
-            if (Target == null)
-            {
-                if (panel.gameObject.activeSelf) Hide();
-                return;
-            }
-            Refresh();
-            Reposition();
-        }
+        // ---------- Content ----------
 
-        void Refresh()
+        void RefreshContent()
         {
-            BuildingYield b = Target;
-            ResourceYield y = b.YearlyYield;
+            BuildingYield building = Target;
+            ResourceYield yearly = building.YearlyYield;
 
             if (icon != null)
             {
-                icon.sprite = b.Icon;
-                icon.enabled = b.Icon != null;
+                icon.sprite = building.Icon;
+                icon.enabled = building.Icon != null;
             }
-            if (nameText != null) nameText.text = b.DisplayName;
-            if (categoryText != null)
-                categoryText.text = b.IsExpired ? "Expired" : (b.Definition != null ? b.Definition.category.ToString() : "Building");
+            if (nameText != null) nameText.text = building.DisplayName;
+            if (categoryText != null) categoryText.text = GetCategoryLabel(building);
 
-            Set(moneyText, y.money, "$", "");
-            Set(ecoText, y.eco, "", " eco");
-            Set(populationText, y.population, "", " pop");
-            Set(happinessText, y.happiness, "", "%");
+            SetSignedText(moneyText, yearly.money, "$", "");
+            SetSignedText(ecoText, yearly.eco, "", " eco");
+            SetSignedText(populationText, yearly.population, "", " pop");
+            SetSignedText(happinessText, yearly.happiness, "", "%");
 
-            float remaining = b.YearsRemaining;
-            if (float.IsInfinity(remaining))
+            RefreshLifespan(building);
+        }
+
+        static string GetCategoryLabel(BuildingYield building)
+        {
+            if (building.IsExpired) return "Expired";
+            return building.Definition != null ? building.Definition.category.ToString() : "Building";
+        }
+
+        void RefreshLifespan(BuildingYield building)
+        {
+            float yearsRemaining = building.YearsRemaining;
+
+            if (float.IsInfinity(yearsRemaining))
             {
                 if (lifespanText != null) lifespanText.text = "Lasts forever";
                 if (lifespanFill != null) lifespanFill.anchorMax = new Vector2(1f, 1f);
+                return;
             }
-            else
+
+            int wholeYearsLeft = Mathf.CeilToInt(yearsRemaining);
+            if (lifespanText != null)
+                lifespanText.text = building.IsExpired
+                    ? "Expired"
+                    : $"{wholeYearsLeft} yr{(wholeYearsLeft == 1 ? "" : "s")} left";
+
+            if (lifespanFill != null)
             {
-                int yrs = Mathf.CeilToInt(remaining);
-                if (lifespanText != null) lifespanText.text = b.IsExpired ? "Expired" : $"{yrs} yr{(yrs == 1 ? "" : "s")} left";
-                if (lifespanFill != null)
-                    lifespanFill.anchorMax = new Vector2(Mathf.Clamp01(remaining / Mathf.Max(1, b.LifespanYears)), 1f);
+                float fractionLeft = yearsRemaining / Mathf.Max(1, building.LifespanYears);
+                lifespanFill.anchorMax = new Vector2(Mathf.Clamp01(fractionLeft), 1f);
             }
         }
 
-        static void Set(Text t, float v, string prefix, string suffix)
+        static void SetSignedText(Text textField, float value, string prefix, string suffix)
         {
-            if (t == null) return;
-            t.text = ArcadePalette.Signed(v, prefix, suffix);
-            t.color = ArcadePalette.DeltaColor(v);
+            if (textField == null) return;
+            textField.text = ArcadePalette.Signed(value, prefix, suffix);
+            textField.color = ArcadePalette.DeltaColor(value);
         }
 
-        void Reposition()
+        // ---------- Positioning ----------
+
+        /// <summary>Places the bubble just above the building, kept inside the screen.</summary>
+        void FollowTarget()
         {
             if (canvasRect == null || worldCamera == null) return;
 
-            // Top-center of the building in world space.
-            Vector3 world = Target.transform.position;
-            Collider2D col = Target.GetComponentInChildren<Collider2D>();
-            if (col != null) world = new Vector3(col.bounds.center.x, col.bounds.max.y, col.bounds.center.z);
+            Vector3 buildingTopWorld = GetTopCenterOfBuilding(Target);
+            Vector2 buildingTopScreen = worldCamera.WorldToScreenPoint(buildingTopWorld);
 
-            Vector2 screen = worldCamera.WorldToScreenPoint(world);
-            Camera uiCam = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
-            if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, screen, uiCam, out Vector2 local))
+            // Overlay canvases don't use a camera for UI conversion.
+            Camera uiCamera = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
+            if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, buildingTopScreen, uiCamera, out Vector2 buildingTopOnCanvas))
                 return;
 
             // Panel pivot is bottom-center, so this puts the arrow just above the building.
-            Vector2 pos = local + new Vector2(0f, gap);
+            Vector2 bubblePosition = buildingTopOnCanvas + new Vector2(0f, gap);
 
             // Keep the bubble on screen.
-            Vector2 half = canvasRect.rect.size * 0.5f;
-            Vector2 size = panel.rect.size;
-            pos.x = Mathf.Clamp(pos.x, -half.x + size.x * 0.5f + screenMargin, half.x - size.x * 0.5f - screenMargin);
-            pos.y = Mathf.Clamp(pos.y, -half.y + screenMargin, half.y - size.y - screenMargin);
-            panel.anchoredPosition = pos;
+            Vector2 halfCanvasSize = canvasRect.rect.size * 0.5f;
+            Vector2 panelSize = panel.rect.size;
+            bubblePosition.x = Mathf.Clamp(bubblePosition.x,
+                -halfCanvasSize.x + panelSize.x * 0.5f + screenMargin,
+                halfCanvasSize.x - panelSize.x * 0.5f - screenMargin);
+            bubblePosition.y = Mathf.Clamp(bubblePosition.y,
+                -halfCanvasSize.y + screenMargin,
+                halfCanvasSize.y - panelSize.y - screenMargin);
+
+            panel.anchoredPosition = bubblePosition;
+        }
+
+        /// <summary>Top-center of the building's collider, or its pivot if it has no collider.</summary>
+        static Vector3 GetTopCenterOfBuilding(BuildingYield building)
+        {
+            Collider2D buildingCollider = building.GetComponentInChildren<Collider2D>();
+            if (buildingCollider == null) return building.transform.position;
+
+            Bounds bounds = buildingCollider.bounds;
+            return new Vector3(bounds.center.x, bounds.max.y, bounds.center.z);
         }
     }
 }

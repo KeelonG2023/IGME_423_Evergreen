@@ -13,6 +13,8 @@ namespace Evergreen.UI
     {
         [SerializeField] BuildingTooltip tooltip;
         [SerializeField] Camera worldCamera;
+
+        [Tooltip("Only colliders on these layers count as buildings.")]
         [SerializeField] LayerMask buildingLayers = ~0;
 
         void Awake()
@@ -23,23 +25,36 @@ namespace Evergreen.UI
 
         void Update()
         {
-            Keyboard kb = Keyboard.current;
-            if (kb != null && kb.escapeKey.wasPressedThisFrame && tooltip != null) tooltip.Hide();
+            Keyboard keyboard = Keyboard.current;
+            if (keyboard != null && keyboard.escapeKey.wasPressedThisFrame && tooltip != null)
+                tooltip.Hide();
 
             Mouse mouse = Mouse.current;
             if (mouse == null || tooltip == null || worldCamera == null) return;
             if (!mouse.leftButton.wasPressedThisFrame) return;
 
             // Clicks on the HUD itself shouldn't close or change the tooltip.
-            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
+            bool clickedOnUi = EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
+            if (clickedOnUi) return;
 
-            Vector2 screen = mouse.position.ReadValue();
-            Vector3 world = worldCamera.ScreenToWorldPoint(new Vector3(screen.x, screen.y, -worldCamera.transform.position.z));
-            Collider2D hit = Physics2D.OverlapPoint(world, buildingLayers);
-            BuildingYield building = hit != null ? hit.GetComponentInParent<BuildingYield>() : null;
+            BuildingYield clickedBuilding = FindBuildingUnderMouse(mouse);
 
-            if (building == null || building == tooltip.Target) tooltip.Hide();
-            else tooltip.Show(building);
+            // Clicking empty ground or the already-open building closes the tooltip.
+            if (clickedBuilding == null || clickedBuilding == tooltip.Target) tooltip.Hide();
+            else tooltip.Show(clickedBuilding);
+        }
+
+        BuildingYield FindBuildingUnderMouse(Mouse mouse)
+        {
+            Vector2 mouseScreenPosition = mouse.position.ReadValue();
+
+            // The z value is the distance from the camera to the 2D world plane (z = 0).
+            float distanceToWorldPlane = -worldCamera.transform.position.z;
+            Vector3 mouseWorldPosition = worldCamera.ScreenToWorldPoint(
+                new Vector3(mouseScreenPosition.x, mouseScreenPosition.y, distanceToWorldPlane));
+
+            Collider2D hitCollider = Physics2D.OverlapPoint(mouseWorldPosition, buildingLayers);
+            return hitCollider != null ? hitCollider.GetComponentInParent<BuildingYield>() : null;
         }
     }
 }
