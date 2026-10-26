@@ -5,31 +5,27 @@ using UnityEngine.UI;
 namespace Evergreen.UI
 {
     /// <summary>
-    /// Adds a small tab on the build panel's left edge. Clicking it slides the panel
-    /// off the right side of the screen (the tab stays visible) and clicking again
-    /// slides it back. Builds its own button in code; BuildMenu adds this at startup.
+    /// Slides the build panel off the right side of the screen (the tab stays visible)
+    /// when the collapse button is clicked, and back again on the next click.
+    /// The button and its arrow live in the scene (child "Collapse Button" of the panel).
     /// </summary>
     [RequireComponent(typeof(RectTransform))]
     public class BuildPanelToggle : MonoBehaviour
     {
-        // Sizes are in canvas pixels (the HUD canvas scales from 1920x1080).
-        const float ButtonWidth = 40f;
-        const float ButtonHeight = 88f;
-
-        /// <summary>How far down from the panel's top edge the button sits.</summary>
-        const float ButtonTopOffset = 16f;
-
-        const int ArrowFontSize = 30;
         const float SlideDurationSeconds = 0.2f;
 
         // Arrows point the way the panel will move when clicked.
         const string CollapseArrow = ">";
         const string ExpandArrow = "<";
 
+        [Tooltip("The tab on the panel's left edge that toggles the panel.")]
+        [SerializeField] Button collapseButton;
+        [Tooltip("Arrow label on the button; flips direction with the panel state.")]
+        [SerializeField] Text arrowText;
+
         public bool IsCollapsed { get; private set; }
 
         RectTransform panel;
-        Text arrowText;
 
         /// <summary>The panel's x position when open (as placed in the scene).</summary>
         float openX;
@@ -55,7 +51,7 @@ namespace Evergreen.UI
             float onScreenWidth = panel.rect.width * Mathf.Abs(panel.localScale.x);
             collapsedX = openX + onScreenWidth;
 
-            BuildButton();
+            if (collapseButton != null) collapseButton.onClick.AddListener(OnButtonClicked);
             UpdateArrow();
         }
 
@@ -83,62 +79,7 @@ namespace Evergreen.UI
             UpdateArrow();
         }
 
-        // ---------- Building the button ----------
-
-        void BuildButton()
-        {
-            var buttonObject = new GameObject("Collapse Button",
-                typeof(RectTransform), typeof(Image), typeof(Button), typeof(LayoutElement));
-            buttonObject.transform.SetParent(panel, false);
-
-            // The panel has a layout group; this keeps the button out of it.
-            buttonObject.GetComponent<LayoutElement>().ignoreLayout = true;
-
-            // Anchored to the panel's top-left corner with a right-side pivot,
-            // so the button hangs just outside the panel's left edge.
-            var buttonRect = (RectTransform)buttonObject.transform;
-            buttonRect.anchorMin = buttonRect.anchorMax = new Vector2(0f, 1f);
-            buttonRect.pivot = new Vector2(1f, 1f);
-            buttonRect.sizeDelta = new Vector2(ButtonWidth, ButtonHeight);
-            buttonRect.anchoredPosition = new Vector2(0f, -ButtonTopOffset);
-
-            // Match the panel's background so the tab looks attached to it.
-            Image panelBackground = GetComponent<Image>();
-            var buttonBackground = buttonObject.GetComponent<Image>();
-            buttonBackground.color = panelBackground != null ? panelBackground.color : ArcadePalette.Panel;
-
-            var button = buttonObject.GetComponent<Button>();
-            button.targetGraphic = buttonBackground;
-            button.onClick.AddListener(OnButtonClicked);
-
-            arrowText = BuildArrowText(buttonRect);
-        }
-
-        Text BuildArrowText(RectTransform buttonRect)
-        {
-            var arrowObject = new GameObject("Arrow", typeof(RectTransform), typeof(Text));
-            arrowObject.transform.SetParent(buttonRect, false);
-
-            // Stretch to fill the button.
-            var arrowRect = (RectTransform)arrowObject.transform;
-            arrowRect.anchorMin = Vector2.zero;
-            arrowRect.anchorMax = Vector2.one;
-            arrowRect.offsetMin = Vector2.zero;
-            arrowRect.offsetMax = Vector2.zero;
-
-            // Reuse the panel's own font so the arrow matches the rest of the menu.
-            Text anyPanelText = GetComponentInChildren<Text>(true);
-            Font font = anyPanelText != null ? anyPanelText.font : Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-
-            var arrow = arrowObject.GetComponent<Text>();
-            arrow.font = font;
-            arrow.fontSize = ArrowFontSize;
-            arrow.fontStyle = FontStyle.Bold;
-            arrow.alignment = TextAnchor.MiddleCenter;
-            arrow.color = ArcadePalette.Lime;
-            arrow.raycastTarget = false;
-            return arrow;
-        }
+        // ---------- Button ----------
 
         void OnButtonClicked()
         {
