@@ -61,10 +61,6 @@ namespace Evergreen.UI
         [SerializeField] float activeTabHeight = 46f;
         [SerializeField] float inactiveTabHeight = 40f;
 
-        [Header("Collapse")]
-        [Tooltip("Adds a tab on the panel's left edge that slides the panel off screen and back.")]
-        [SerializeField] bool addCollapseButton = true;
-
         /// <summary>Raised with the definition when the player presses Place, or null when cleared.</summary>
         public event Action<BuildingDefinition> StructureSelected;
 
@@ -81,9 +77,6 @@ namespace Evergreen.UI
         void Awake()
         {
             if (resources == null) resources = FindFirstObjectByType<ResourceManager>();
-
-            if (addCollapseButton && GetComponent<BuildPanelToggle>() == null)
-                gameObject.AddComponent<BuildPanelToggle>();
         }
 
         void Start()
