@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5195734926311392985}
   - component: {fileID: 1025225661354056531}
   - component: {fileID: 14025570741345727}
+  - component: {fileID: 3052201738240423107}
   m_Layer: 0
   m_Name: TestBuilding
   m_TagString: Untagged
@@ -29,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.9, y: 2, z: 0.9}
+  m_LocalScale: {x: 13.3578, y: 29.684, z: 13.3578}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -108,3 +109,24 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3052201738240423107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3469108991671424197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3bc21cc1a01a144eaab97a149986089, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  definition: {fileID: 0}
+  displayName: Building
+  yearlyYield:
+    money: 10000
+    eco: 0
+    population: 0
+    happiness: 0
+  lifespanYears: 0
+  spriteToGreyOutOnExpire: {fileID: 0}

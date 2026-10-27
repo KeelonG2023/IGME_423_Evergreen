@@ -179,10 +179,13 @@ namespace Evergreen.UI
         /// <summary>Top-center of the building's collider, or its pivot if it has no collider.</summary>
         static Vector3 GetTopCenterOfBuilding(BuildingYield building)
         {
-            Collider2D buildingCollider = building.GetComponentInChildren<Collider2D>();
-            if (buildingCollider == null) return building.transform.position;
+            Bounds bounds;
+            Collider collider3D = building.GetComponentInChildren<Collider>();
+            Collider2D collider2D = building.GetComponentInChildren<Collider2D>();
+            if (collider3D != null) bounds = collider3D.bounds;
+            else if (collider2D != null) bounds = collider2D.bounds;
+            else return building.transform.position;
 
-            Bounds bounds = buildingCollider.bounds;
             return new Vector3(bounds.center.x, bounds.max.y, bounds.center.z);
         }
     }

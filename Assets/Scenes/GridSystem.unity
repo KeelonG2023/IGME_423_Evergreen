@@ -562,60 +562,73 @@ MonoBehaviour:
   grid: {fileID: 0}
   gridSize: 1
   currentCellPos: {x: 0, y: 0, z: 0}
---- !u!1 &1607994550
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1607994552}
-  - component: {fileID: 1607994551}
-  m_Layer: 0
-  m_Name: BuildingGrid
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!156049354 &1607994551
-Grid:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1607994550}
-  m_Enabled: 1
-  m_CellSize: {x: 0.9, y: 0.9, z: 0}
-  m_CellGap: {x: 0.3, y: 0.3, z: 0}
-  m_CellLayout: 0
-  m_CellSwizzle: 1
---- !u!4 &1607994552
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1607994550}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &2044511900 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3745716938879314142, guid: acf33570e7f201944a82fb066e805623, type: 3}
   m_PrefabInstance: {fileID: 447335960}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &847657773725271255
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3172247755852691245, guid: e9fddc7a6a6a9db4dbef191346e4d7fe, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3172247755852691245, guid: e9fddc7a6a6a9db4dbef191346e4d7fe, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3172247755852691245, guid: e9fddc7a6a6a9db4dbef191346e4d7fe, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3172247755852691245, guid: e9fddc7a6a6a9db4dbef191346e4d7fe, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3172247755852691245, guid: e9fddc7a6a6a9db4dbef191346e4d7fe, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3172247755852691245, guid: e9fddc7a6a6a9db4dbef191346e4d7fe, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3172247755852691245, guid: e9fddc7a6a6a9db4dbef191346e4d7fe, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3172247755852691245, guid: e9fddc7a6a6a9db4dbef191346e4d7fe, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3172247755852691245, guid: e9fddc7a6a6a9db4dbef191346e4d7fe, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3172247755852691245, guid: e9fddc7a6a6a9db4dbef191346e4d7fe, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4496564315191989285, guid: e9fddc7a6a6a9db4dbef191346e4d7fe, type: 3}
+      propertyPath: m_Name
+      value: BuildingGrid
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e9fddc7a6a6a9db4dbef191346e4d7fe, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1498412292}
-  - {fileID: 1607994552}
+  - {fileID: 847657773725271255}
   - {fileID: 122134490}
   - {fileID: 1051693088}

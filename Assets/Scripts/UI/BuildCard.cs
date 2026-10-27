@@ -40,8 +40,10 @@ namespace Evergreen.UI
         [SerializeField] Text lifespanText;
         [Tooltip("Shown when the player can't afford this building.")]
         [SerializeField] GameObject lockedOverlay;
-        [Tooltip("Arrow that flips when the card opens.")]
+        [Tooltip("Arrow that flips when the card opens. Clicking it opens / closes the details.")]
         [SerializeField] RectTransform chevron;
+        [Tooltip("Optional. Opens / closes the details. If empty, the chevron is made clickable automatically.")]
+        [SerializeField] Button detailsButton;
         [SerializeField] Outline selectedOutline;
 
         [Header("Collapsed")]
@@ -70,6 +72,7 @@ namespace Evergreen.UI
         public BuildingDefinition Definition { get; private set; }
         public Button HeaderButton => headerButton;
         public Button PlaceButton => placeButton;
+        public Button DetailsButton => detailsButton;
         public bool IsOpen { get; private set; }
 
         // ---------- Setup ----------
@@ -77,6 +80,7 @@ namespace Evergreen.UI
         /// <summary>Fills every text, icon and number on the card from a building definition.</summary>
         public void Setup(BuildingDefinition building, ResourceIcons icons)
         {
+            EnsureDetailsButton();
             Definition = building;
             ResourceYield yearly = building.yearlyYield;
 
@@ -116,6 +120,7 @@ namespace Evergreen.UI
 
             if (placeButtonLabel != null) placeButtonLabel.text = "Place " + building.displayName;
             SetOpen(false);
+            SetPicked(false);
         }
 
         /// <summary>Adds a chip for a non-zero yield, unless the row is already full.</summary>
@@ -182,6 +187,35 @@ namespace Evergreen.UI
             totalParts.Add($"<color=#{colorHex}>{ArcadePalette.Signed(total, prefix, suffix)}</color>");
         }
 
+        /// <summary>
+        /// Clicking the card itself now picks the building for placement, so the details need their own
+        /// button. Turns the chevron into one, with a comfortable invisible hit area around it.
+        /// </summary>
+        void EnsureDetailsButton()
+        {
+            if (detailsButton != null || chevron == null) return;
+
+            var hitArea = new GameObject("Details Hit Area", typeof(RectTransform), typeof(Image));
+            var hitRect = (RectTransform)hitArea.transform;
+            hitRect.SetParent(chevron, false);
+            hitRect.anchorMin = Vector2.zero;
+            hitRect.anchorMax = Vector2.one;
+            hitRect.sizeDelta = new Vector2(24f, 24f); // a little bigger than the arrow itself
+            Image hitImage = hitArea.GetComponent<Image>();
+            hitImage.color = new Color(0f, 0f, 0f, 0f); // invisible, but still catches clicks
+            hitImage.raycastTarget = true;
+
+            detailsButton = chevron.gameObject.AddComponent<Button>();
+            detailsButton.targetGraphic = chevron.GetComponent<Graphic>() != null ? chevron.GetComponent<Graphic>() : hitImage;
+            detailsButton.transition = Selectable.Transition.ColorTint;
+        }
+
+        /// <summary>Outline on the card the player is currently placing.</summary>
+        public void SetPicked(bool picked)
+        {
+            if (selectedOutline != null) selectedOutline.enabled = picked;
+        }
+
         // ---------- State ----------
 
         /// <summary>Greys the card out and disables Place when the player can't afford it.</summary>
@@ -215,7 +249,6 @@ namespace Evergreen.UI
             IsOpen = open;
             if (detailsPanel != null) detailsPanel.SetActive(open);
             if (chipRow != null) chipRow.gameObject.SetActive(!open);
-            if (selectedOutline != null) selectedOutline.enabled = open;
             if (chevron != null) chevron.localEulerAngles = new Vector3(0f, 0f, open ? 180f : 0f);
         }
     }

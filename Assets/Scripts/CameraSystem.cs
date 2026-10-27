@@ -140,11 +140,15 @@ public class CameraSystem : MonoBehaviour
 
     private void HandleZoom()
     {
-        if (Input.mouseScrollDelta.y > 0)
+        // Scrolling over the HUD (e.g. the build panel's card list) scrolls the UI, not the camera.
+        bool pointerOverUi = UnityEngine.EventSystems.EventSystem.current != null
+                             && UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject();
+
+        if (!pointerOverUi && Input.mouseScrollDelta.y > 0)
         {
             targetFOV -= 5;
         }
-        if (Input.mouseScrollDelta.y < 0)
+        if (!pointerOverUi && Input.mouseScrollDelta.y < 0)
         {
             targetFOV += 5;
         }

@@ -33,6 +33,9 @@ namespace Evergreen.UI
             if (mouse == null || tooltip == null || worldCamera == null) return;
             if (!mouse.leftButton.wasPressedThisFrame) return;
 
+            // While a building is being placed, left click belongs to the placement system.
+            if (GridPlacement.IsPlacing) return;
+
             // Clicks on the HUD itself shouldn't close or change the tooltip.
             bool clickedOnUi = EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
             if (clickedOnUi) return;
@@ -47,6 +50,16 @@ namespace Evergreen.UI
         BuildingYield FindBuildingUnderMouse(Mouse mouse)
         {
             Vector2 mouseScreenPosition = mouse.position.ReadValue();
+
+            // 3D buildings: raycast from the camera.
+            Ray ray = worldCamera.ScreenPointToRay(mouseScreenPosition);
+            if (Physics.Raycast(ray, out RaycastHit hit, 5000f, buildingLayers, QueryTriggerInteraction.Ignore))
+            {
+                BuildingYield hitBuilding = hit.collider.GetComponentInParent<BuildingYield>();
+                if (hitBuilding != null) return hitBuilding;
+            }
+
+            // 2D fallback (sprites with Collider2D).
 
             // The z value is the distance from the camera to the 2D world plane (z = 0).
             float distanceToWorldPlane = -worldCamera.transform.position.z;

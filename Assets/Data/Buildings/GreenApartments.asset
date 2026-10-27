@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf17422321d3e694e8529b469afb59b5, type: 3}
+  m_Name: GreenApartments
+  m_EditorClassIdentifier: 
+  displayName: Green Apartments
+  category: 1
+  icon: {fileID: 8934166159419189772, guid: 8e8ce1fb5a6411948b4f2c80900a400b, type: 3}
+  tileColor: {r: 0.45, g: 0.8, b: 0.4, a: 1}
+  description: Apartments with a rooftop garden and better insulation. Costs more,
+    but lower bills and happier tenants.
+  cost: 1300
+  yearlyYield:
+    money: 70
+    eco: 1
+    population: 40
+    happiness: 2
+  lifespanYears: 60
+  footprint: {x: 1, y: 2}
+  prefab: {fileID: 2853201490611962687, guid: b44361cfe8524ca449880d12f9f130f5, type: 3}

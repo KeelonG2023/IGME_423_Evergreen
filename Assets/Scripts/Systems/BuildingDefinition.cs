@@ -34,6 +34,9 @@ namespace Evergreen.Systems
         [Min(0)] public int lifespanYears = 30;
 
         [Header("Placement")]
+        [Tooltip("Grid cells it covers (x by z) before rotating. Evergreen > Playtest Setup fills this from the model's size.")]
+        public Vector2Int footprint = Vector2Int.one;
+
         [Tooltip("Prefab the placement system spawns. Should have a BuildingYield and a Collider2D.")]
         public GameObject prefab;
     }

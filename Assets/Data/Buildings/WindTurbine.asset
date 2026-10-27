@@ -25,4 +25,5 @@ MonoBehaviour:
     population: 0
     happiness: -1
   lifespanYears: 20
-  prefab: {fileID: 0}
+  footprint: {x: 1, y: 1}
+  prefab: {fileID: 344837838682799077, guid: d75a1867d23569a41a5508f002b9e2af, type: 3}

@@ -10,8 +10,9 @@ namespace Evergreen.UI
 {
     /// <summary>
     /// Folder-tab build menu. Each BuildingDefinition in the catalog becomes a card.
-    /// Clicking a card expands it (one at a time); its Place button raises
-    /// StructureSelected, which the placement system listens to.
+    /// Clicking a card picks that building and starts placing it right away (click again to put it down).
+    /// The chevron on the card opens the details (one at a time); the Place button in there works too.
+    /// Picking raises StructureSelected, which the placement system listens to.
     /// </summary>
     public class BuildMenu : MonoBehaviour
     {
@@ -118,7 +119,8 @@ namespace Evergreen.UI
                 card.gameObject.SetActive(true);
                 card.Setup(building, icons);
 
-                if (card.HeaderButton != null) card.HeaderButton.onClick.AddListener(() => ToggleCard(card));
+                if (card.HeaderButton != null) card.HeaderButton.onClick.AddListener(() => PickCard(card));
+                if (card.DetailsButton != null) card.DetailsButton.onClick.AddListener(() => ToggleCard(card));
                 if (card.PlaceButton != null) card.PlaceButton.onClick.AddListener(() => PlaceCard(card));
                 cards.Add(card);
             }
@@ -153,12 +155,28 @@ namespace Evergreen.UI
             RebuildLayout();
         }
 
+        /// <summary>Clicking the card: pick it for placement, or drop it if it's already picked.
+        /// If it can't be afforded, open the details instead so the player sees how much is missing.</summary>
+        void PickCard(BuildCard card)
+        {
+            ClearUiFocus();
+            if (Selected == card.Definition) { ClearSelection(); return; }
+
+            if (resources != null && !resources.CanAfford(card.Definition.cost))
+            {
+                if (!card.IsOpen) ToggleCard(card);
+                return;
+            }
+            PlaceCard(card);
+        }
+
         void PlaceCard(BuildCard card)
         {
             ClearUiFocus();
             if (resources != null && !resources.CanAfford(card.Definition.cost)) return;
 
             Selected = card.Definition;
+            RefreshPicked();
             StructureSelected?.Invoke(Selected);
         }
 
@@ -166,7 +184,13 @@ namespace Evergreen.UI
         {
             if (Selected == null) return;
             Selected = null;
+            RefreshPicked();
             StructureSelected?.Invoke(null);
+        }
+
+        void RefreshPicked()
+        {
+            foreach (BuildCard card in cards) card.SetPicked(card.Definition == Selected);
         }
 
         public void CollapseAll()

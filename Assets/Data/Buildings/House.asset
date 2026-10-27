@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf17422321d3e694e8529b469afb59b5, type: 3}
+  m_Name: House
+  m_EditorClassIdentifier: 
+  displayName: House
+  category: 1
+  icon: {fileID: 8934166159419189772, guid: 8e8ce1fb5a6411948b4f2c80900a400b, type: 3}
+  tileColor: {r: 0.95, g: 0.75, b: 0.5, a: 1}
+  description: A single family home. Cheap and cosy, but it takes a lot of land per
+    person.
+  cost: 400
+  yearlyYield:
+    money: 20
+    eco: -1
+    population: 10
+    happiness: 1
+  lifespanYears: 40
+  footprint: {x: 1, y: 1}
+  prefab: {fileID: 3870076005249895959, guid: 5a43576e62ad92045b9171c0e5915808, type: 3}
