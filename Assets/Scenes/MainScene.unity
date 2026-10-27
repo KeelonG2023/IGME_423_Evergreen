@@ -199,6 +199,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Simulation
       objectReference: {fileID: 0}
+    - target: {fileID: 9161285029739790744, guid: 2029e9b5a0d44a84989123619ebe4c35, type: 3}
+      propertyPath: secondsPerYear
+      value: 60
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
