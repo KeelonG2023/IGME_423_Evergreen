@@ -6250,6 +6250,9 @@ MonoBehaviour:
   buildingLayers:
     serializedVersion: 2
     m_Bits: 4294967295
+  outlineShader: {fileID: 4800000, guid: 8e3c1f6a2b7d4e9f9a1c5d2e7b4f6a31, type: 3}
+  outlineColor: {r: 1, g: 0.85, b: 0.2, a: 1}
+  outlineWidth: 1
 --- !u!1 &3290005195579901776
 GameObject:
   m_ObjectHideFlags: 0
