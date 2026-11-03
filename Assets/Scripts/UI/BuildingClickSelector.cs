@@ -1,3 +1,4 @@
+using System;
 using Evergreen.Systems;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -7,7 +8,8 @@ namespace Evergreen.UI
 {
     /// <summary>
     /// Click a placed building (any BuildingYield with a collider) to select it: it gets a highlight
-    /// outline and its tooltip opens. Click it again, click empty ground, or press Escape to deselect.
+    /// outline, its tooltip opens and SelectionChanged fires (the upgrade panel listens to that).
+    /// Click it again, click empty ground, or press Escape to deselect.
     /// </summary>
     public class BuildingClickSelector : MonoBehaviour
     {
@@ -26,6 +28,9 @@ namespace Evergreen.UI
 
         /// <summary>The currently selected building, or null.</summary>
         public BuildingYield Selected { get; private set; }
+
+        /// <summary>Raised with the newly selected building, or null when the selection is cleared.</summary>
+        public event Action<BuildingYield> SelectionChanged;
 
         Material outlineMaterial;
         Material maskMaterial;
@@ -64,7 +69,7 @@ namespace Evergreen.UI
         void Update()
         {
             // Building was destroyed, or something else closed the tooltip.
-            if (Selected == null && selectedOutline != null) Deselect();
+            if (!ReferenceEquals(Selected, null) && Selected == null) Deselect();
             else if (Selected != null && tooltip != null && tooltip.Target != Selected) Deselect();
 
             // Picking a new building to place clears the current selection.
@@ -97,6 +102,7 @@ namespace Evergreen.UI
             if (building == null) { Deselect(); return; }
             if (selectedOutline != null) selectedOutline.Hide();
 
+            bool changed = Selected != building;
             Selected = building;
 
             if (outlineMaterial != null)
@@ -110,14 +116,19 @@ namespace Evergreen.UI
             }
 
             if (tooltip != null) tooltip.Show(building);
+            if (changed) SelectionChanged?.Invoke(building);
         }
 
         public void Deselect()
         {
+            // "Selected is not null" in plain C#: still true for a building that was just destroyed.
+            bool hadSelection = !ReferenceEquals(Selected, null);
+
             if (selectedOutline != null) selectedOutline.Hide();
             selectedOutline = null;
             Selected = null;
             if (tooltip != null && tooltip.Target != null) tooltip.Hide();
+            if (hadSelection) SelectionChanged?.Invoke(null);
         }
 
         BuildingYield FindBuildingUnderMouse(Mouse mouse)

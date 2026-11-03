@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -36,6 +37,15 @@ namespace Evergreen.Systems
         [FormerlySerializedAs("tintOnExpire")]
         [SerializeField] SpriteRenderer spriteToGreyOutOnExpire;
 
+        [Header("Upgrades")]
+        [Tooltip("Upgrades bought for this building. Filled at runtime by the upgrade panel.")]
+        [SerializeField] List<BuildingUpgrade> installedUpgrades = new List<BuildingUpgrade>();
+
+        /// <summary>Fires on this building whenever an upgrade is installed.</summary>
+        public event Action<BuildingYield> UpgradesChanged;
+
+        static readonly List<BuildingUpgrade> NoUpgrades = new List<BuildingUpgrade>();
+
         SimulationClock clock;
 
         // ---------- Read-only info (definition wins over the fallback fields) ----------
@@ -51,12 +61,28 @@ namespace Evergreen.Systems
         /// <summary>True once the lifespan has run out. Expired buildings yield nothing.</summary>
         public bool IsExpired { get; private set; }
 
+        /// <summary>Yield before upgrades (ignores expiry).</summary>
+        public ResourceYield BaseYearlyYield => definition != null ? definition.yearlyYield : yearlyYield;
+
+        /// <summary>Total yearly change from every installed upgrade.</summary>
+        public ResourceYield UpgradeBonus
+        {
+            get
+            {
+                ResourceYield total = ResourceYield.Zero;
+                foreach (BuildingUpgrade upgrade in installedUpgrades)
+                    if (upgrade != null) total += upgrade.yearlyChange;
+                return total;
+            }
+        }
+
+        /// <summary>What the building actually yields each year: base + upgrades, or nothing once expired.</summary>
         public ResourceYield YearlyYield
         {
             get
             {
                 if (IsExpired) return ResourceYield.Zero;
-                return definition != null ? definition.yearlyYield : yearlyYield;
+                return BaseYearlyYield + UpgradeBonus;
             }
             // Setting a custom yield detaches the definition so the custom value is actually used.
             set
@@ -85,6 +111,37 @@ namespace Evergreen.Systems
             definition = newDefinition;
             AgeTicks = 0;
             IsExpired = false;
+            installedUpgrades.Clear();
+        }
+
+        // ---------- Upgrades ----------
+
+        /// <summary>Upgrades this building type can buy (from its definition), in display order.</summary>
+        public IReadOnlyList<BuildingUpgrade> AvailableUpgrades =>
+            definition != null && definition.upgrades != null ? definition.upgrades : NoUpgrades;
+
+        public IReadOnlyList<BuildingUpgrade> InstalledUpgrades => installedUpgrades;
+
+        public bool HasUpgrade(BuildingUpgrade upgrade) => upgrade != null && installedUpgrades.Contains(upgrade);
+
+        /// <summary>True if this building offers the upgrade, doesn't have it yet, and hasn't expired.</summary>
+        public bool CanInstall(BuildingUpgrade upgrade)
+        {
+            if (upgrade == null || IsExpired || HasUpgrade(upgrade)) return false;
+            foreach (BuildingUpgrade offered in AvailableUpgrades)
+                if (offered == upgrade) return true;
+            return false;
+        }
+
+        /// <summary>Spends the upgrade's cost and installs it. Returns false (and spends nothing) if it can't.</summary>
+        public bool TryInstall(BuildingUpgrade upgrade, ResourceManager resources)
+        {
+            if (!CanInstall(upgrade)) return false;
+            if (resources != null && !resources.TrySpend(upgrade.cost)) return false;
+
+            installedUpgrades.Add(upgrade);
+            UpgradesChanged?.Invoke(this);
+            return true;
         }
 
         // ---------- Unity lifecycle ----------

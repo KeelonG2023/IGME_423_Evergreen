@@ -13552,6 +13552,7 @@ GameObject:
   - component: {fileID: 7577449803091660933}
   - component: {fileID: 1700996271346494433}
   - component: {fileID: 8161414976816355521}
+  - component: {fileID: 8885156572081270234}
   m_Layer: 0
   m_Name: Build Panel
   m_TagString: Untagged
@@ -13559,6 +13560,28 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &8885156572081270234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8250461262685422078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e8f5a1c9b3d4f7e8a6c2b1d9e5f3a48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildMenu: {fileID: 0}
+  selector: {fileID: 0}
+  resources: {fileID: 0}
+  panelToggle: {fileID: 0}
+  titleText: {fileID: 0}
+  tabsRow: {fileID: 0}
+  backButtonTemplate: {fileID: 0}
+  scrollRect: {fileID: 0}
+  backLabel: '< Back to Build'
+  titleWhileUpgrading: Upgrades
 --- !u!224 &276564153722230647
 RectTransform:
   m_ObjectHideFlags: 0

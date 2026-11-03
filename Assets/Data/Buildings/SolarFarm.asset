@@ -27,3 +27,5 @@ MonoBehaviour:
   lifespanYears: 25
   footprint: {x: 1, y: 1}
   prefab: {fileID: 8110560812694369791, guid: 6248a00bb6261c5499d2725cd7103341, type: 3}
+  upgrades:
+  - {fileID: 11400000, guid: 9dcda238d5974ba9b5124daa2b98a38f, type: 2}
