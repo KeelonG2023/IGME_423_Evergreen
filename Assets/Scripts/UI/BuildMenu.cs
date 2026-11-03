@@ -69,6 +69,11 @@ namespace Evergreen.UI
         public BuildingDefinition Selected { get; private set; }
         public IReadOnlyList<BuildingDefinition> Catalog => catalog;
 
+        // Shared with UpgradeMenu, which reuses the card look for upgrades.
+        public BuildCard CardTemplate => cardTemplate;
+        public Transform CardParent => cardParent;
+        public ResourceIcons Icons => icons;
+
         readonly List<BuildCard> cards = new List<BuildCard>();
         CategoryTab activeTab;
         float secondsUntilRefresh;
@@ -191,6 +196,26 @@ namespace Evergreen.UI
         void RefreshPicked()
         {
             foreach (BuildCard card in cards) card.SetPicked(card.Definition == Selected);
+        }
+
+        /// <summary>
+        /// Hides every build card (while the upgrade view uses the panel) or shows them again,
+        /// filtered by the tab that was active.
+        /// </summary>
+        public void SetBuildCardsVisible(bool visible)
+        {
+            if (visible)
+            {
+                SelectTab(activeTab);
+                return;
+            }
+
+            foreach (BuildCard card in cards)
+            {
+                card.SetOpen(false);
+                card.gameObject.SetActive(false);
+            }
+            RebuildLayout();
         }
 
         public void CollapseAll()

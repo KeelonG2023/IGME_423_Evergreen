@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Evergreen.Systems
@@ -39,5 +40,9 @@ namespace Evergreen.Systems
 
         [Tooltip("Prefab the placement system spawns. Should have a BuildingYield and a Collider2D.")]
         public GameObject prefab;
+
+        [Header("Upgrades")]
+        [Tooltip("Add-ons a placed building of this type can buy, in display order. Upgrade assets can be shared between building types.")]
+        public List<BuildingUpgrade> upgrades = new List<BuildingUpgrade>();
     }
 }
