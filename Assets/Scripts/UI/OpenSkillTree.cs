@@ -9,7 +9,7 @@ public class OpenSkillTree : MonoBehaviour
 
     private void Start()
     {
-        treeMenu.SetActive(false);
+        //treeMenu.SetActive(false);
     }
 
     public void OpenTree()

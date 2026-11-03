@@ -114,12 +114,12 @@ public class CameraSystem : MonoBehaviour
         if (!useDragPan) return;
         Vector2 panMoveInput = Vector2.zero;
 
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(2))
         {
             dragPanMoveActive = true;
             previousMousePosition = (Vector2)Input.mousePosition;
         }
-        else if (Input.GetMouseButtonUp(1)) dragPanMoveActive = false;
+        else if (Input.GetMouseButtonUp(2)) dragPanMoveActive = false;
 
         if (dragPanMoveActive)
         {
