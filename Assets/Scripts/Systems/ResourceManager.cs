@@ -212,5 +212,10 @@ namespace Evergreen.Systems
         {
             Happiness -= amount;
         }
+
+        public void GainHappiness(float amount)
+        {
+            Happiness += amount;
+        }
     }
 }
