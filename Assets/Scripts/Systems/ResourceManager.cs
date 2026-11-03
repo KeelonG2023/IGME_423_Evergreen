@@ -213,6 +213,7 @@ namespace Evergreen.Systems
             Happiness -= amount;
         }
 
+        // Adds a vaule from the parameter to the happiness variable
         public void GainHappiness(float amount)
         {
             Happiness += amount;
