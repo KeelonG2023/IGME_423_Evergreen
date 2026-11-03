@@ -207,5 +207,16 @@ namespace Evergreen.Systems
             ResourcesChanged?.Invoke(this);
             GameOver?.Invoke(reason);
         }
+
+        public void SpendHappiness(float amount)
+        {
+            Happiness -= amount;
+        }
+
+        // Adds a vaule from the parameter to the happiness variable
+        public void GainHappiness(float amount)
+        {
+            Happiness += amount;
+        }
     }
 }
