@@ -76,9 +76,6 @@ namespace Evergreen.UI
             background.color = ArcadePalette.Panel;
             background.raycastTarget = false;
 
-            var dropShadow = gameObject.AddComponent<Shadow>();
-            dropShadow.effectColor = ArcadePalette.ShadowCol;
-            dropShadow.effectDistance = new Vector2(0f, -5f);
 
             // Never block the mouse, or hovering the tooltip itself would make it flicker closed.
             var canvasGroup = gameObject.AddComponent<CanvasGroup>();
