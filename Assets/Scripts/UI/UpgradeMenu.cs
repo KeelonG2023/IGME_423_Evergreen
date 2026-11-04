@@ -240,6 +240,7 @@ namespace Evergreen.UI
             foreach (BuildingUpgrade upgrade in Target.AvailableUpgrades)
             {
                 if (upgrade == null) continue;
+                if (!ResearchUnlocks.IsAvailable(upgrade)) continue; // not researched in the skill tree yet
 
                 BuildCard card = CreateCard("Upgrade - " + upgrade.displayName);
                 card.SetupUpgrade(upgrade, buildMenu.Icons, Target.YearsRemaining);

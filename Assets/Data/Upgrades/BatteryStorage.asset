@@ -21,3 +21,4 @@ MonoBehaviour:
     eco: 0
     population: 0
     happiness: 0
+  requiresResearch: 1

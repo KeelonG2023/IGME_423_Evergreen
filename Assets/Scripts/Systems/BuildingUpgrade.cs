@@ -26,5 +26,9 @@ namespace Evergreen.Systems
 
         [Tooltip("Added to the building's yearly yield once installed. Negative = extra upkeep / damage.")]
         public ResourceYield yearlyChange;
+
+        [Header("Research")]
+        [Tooltip("If ticked, the upgrade menu hides this until it's researched in the skill tree.")]
+        public bool requiresResearch;
     }
 }

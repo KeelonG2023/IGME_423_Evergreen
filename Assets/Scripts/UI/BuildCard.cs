@@ -288,6 +288,60 @@ namespace Evergreen.UI
             }
         }
 
+        // ---------- Skill tree nodes ----------
+
+        /// <summary>
+        /// Skill tree look: same card as the build menu, but it never expands and the cost pill
+        /// shows the research cost. Clicking the card selects the node (wired by NodeBehavior).
+        /// </summary>
+        public void SetupTreeNode(BuildingDefinition building, ResourceIcons icons)
+        {
+            Setup(building, icons);
+            if (chevron != null) chevron.gameObject.SetActive(false);
+            if (detailsButton != null) detailsButton.gameObject.SetActive(false);
+        }
+
+        /// <summary>Skill tree look for an upgrade node: the upgrade card, never expanding.</summary>
+        public void SetupTreeNode(BuildingUpgrade upgrade, ResourceIcons icons)
+        {
+            SetupUpgrade(upgrade, icons, float.PositiveInfinity);
+            if (chevron != null) chevron.gameObject.SetActive(false);
+            if (detailsButton != null) detailsButton.gameObject.SetActive(false);
+        }
+
+        /// <summary>Relabels the Place button (the skill tree uses it as its Research button).</summary>
+        public void SetActionButton(string label, bool interactable)
+        {
+            if (placeButton != null) placeButton.interactable = interactable;
+            if (placeButtonBackground != null) placeButtonBackground.color = interactable ? ArcadePalette.Lime : ArcadePalette.Track;
+            if (placeButtonLabel != null)
+            {
+                placeButtonLabel.text = label;
+                placeButtonLabel.color = interactable ? PlaceLabelColor : ArcadePalette.TextMuted;
+            }
+        }
+
+        /// <summary>Locked / unlocked / purchased / selected look for a skill tree node.</summary>
+        /// <param name="canAfford">False turns the cost pill red while the node is still unlocked.</param>
+        public void SetTreeNodeState(bool unlocked, bool purchased, bool selected, float researchCost, bool canAfford = true)
+        {
+            bool dimmed = !unlocked && !purchased;
+
+            if (lockedOverlay != null) lockedOverlay.SetActive(dimmed);
+            if (selectedOutline != null) selectedOutline.enabled = selected;
+            if (icon != null) icon.color = dimmed ? FadedIcon : Color.white;
+            if (nameText != null) nameText.color = dimmed ? LockedNameColor : Color.white;
+
+            if (costPillBackground != null)
+                costPillBackground.color = purchased ? ArcadePalette.Lime : (dimmed || !canAfford ? UnaffordableCostPill : ArcadePalette.Amber);
+            if (costText != null)
+            {
+                costText.text = purchased ? "Unlocked" : (dimmed ? "Locked" : $"{researchCost:0} pts");
+                costText.color = purchased ? PlaceLabelColor : (dimmed || !canAfford ? UnaffordableText : CostTextColor);
+            }
+            SetOpen(false);
+        }
+
         // ---------- Selected-building summary ----------
 
         /// <summary>
