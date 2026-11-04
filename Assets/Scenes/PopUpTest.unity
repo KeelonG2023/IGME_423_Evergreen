@@ -426,6 +426,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdea1f1cf856d0c49a98a3f8ea6d5f0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HappinessBt: {fileID: 0}
 --- !u!1 &1094750332
 GameObject:
   m_ObjectHideFlags: 0

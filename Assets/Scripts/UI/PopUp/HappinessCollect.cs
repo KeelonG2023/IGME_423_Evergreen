@@ -11,7 +11,7 @@ public class HappinessCollect : MonoBehaviour
 
     public void Printing()
     {
-        
+        //Debug.Log("Total Happiness: " + resourceManager.Happiness); // prints out the happiness value from resource manager
         print("Happiness Collected"); // prints out to see if buttons works
         //resourceManager.GainHappiness(1f); // adds happiness when button is pressed
         //Debug.Log("Total Happiness: " + resourceManager.Happiness); // prints out the happiness value from resource manager
