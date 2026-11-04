@@ -127,14 +127,16 @@ namespace Evergreen.UI
 
         static void RestartScene()
         {
-            Scene currentScene = SceneManager.GetActiveScene();
-#if UNITY_EDITOR
-            // Works in the editor even if the scene isn't in the build scene list.
-            UnityEditor.SceneManagement.EditorSceneManager.LoadSceneInPlayMode(
-                currentScene.path, new LoadSceneParameters(LoadSceneMode.Single));
-#else
-            SceneManager.LoadScene(currentScene.buildIndex);
-#endif
+            string currentSceneName = SceneManager.GetActiveScene().name;
+            SceneManager.LoadScene(currentSceneName);
+            //            Scene currentScene = SceneManager.GetActiveScene();
+            //#if UNITY_EDITOR
+            //            // Works in the editor even if the scene isn't in the build scene list.
+            //            UnityEditor.SceneManagement.EditorSceneManager.LoadSceneInPlayMode(
+            //                currentScene.path, new LoadSceneParameters(LoadSceneMode.Single));
+            //#else
+            //            SceneManager.LoadScene(currentScene.buildIndex);
+            //#endif
         }
     }
 }

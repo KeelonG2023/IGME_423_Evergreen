@@ -1,6 +1,9 @@
 using Evergreen.UI;
 using UnityEngine;
 
+/// <summary>
+/// Helper script used to both open & close the skill tree menu
+/// </summary>
 public class OpenSkillTree : MonoBehaviour
 {
     [SerializeField] private GameObject treeMenu;

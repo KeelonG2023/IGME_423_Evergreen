@@ -4,6 +4,11 @@ using System.Collections.Generic;
 using Evergreen.Systems;
 using UnityEngine.UI;
 
+/// <summary>
+/// Represents a node within the skill tree
+/// Stores the node's build card and happiness cost
+/// Updates the visual style of itself and any dependant nodes/branches when purchased
+/// </summary>
 public class NodeBehavior : MonoBehaviour
 {
     [SerializeField] public BuildingDefinition building;
@@ -48,6 +53,7 @@ public class NodeBehavior : MonoBehaviour
         else SetButtonState(lockedState);
     }
 
+    /// <summary>Changes the viusal style of the node to reflect its state </summary>
     private void SetButtonState(Button template)
     {
         button.transition = template.transition;
@@ -56,6 +62,7 @@ public class NodeBehavior : MonoBehaviour
         button.animationTriggers = template.animationTriggers;
     }
 
+    /// <summary>Updates the visual look of the dependent branches and nodes </summary>
     public void PurchaseNode()
     {
         purchased = true;

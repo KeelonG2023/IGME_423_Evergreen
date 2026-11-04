@@ -1,10 +1,11 @@
+using Evergreen.Systems;
 using System;
 using System.Collections.Generic;
-using Evergreen.Systems;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+//using UnityEngine.UIElements;
 
 namespace Evergreen.UI
 {
@@ -116,19 +117,25 @@ namespace Evergreen.UI
             cardTemplate.gameObject.SetActive(false);
 
             foreach (BuildingDefinition building in catalog)
-            {
-                if (building == null) continue;
-
-                BuildCard card = Instantiate(cardTemplate, cardParent);
-                card.name = "Card - " + building.displayName;
-                card.gameObject.SetActive(true);
-                card.Setup(building, icons);
-
-                if (card.HeaderButton != null) card.HeaderButton.onClick.AddListener(() => PickCard(card));
-                if (card.DetailsButton != null) card.DetailsButton.onClick.AddListener(() => ToggleCard(card));
-                if (card.PlaceButton != null) card.PlaceButton.onClick.AddListener(() => PlaceCard(card));
-                cards.Add(card);
+            {            
+                AddCard(building);
             }
+        }
+
+        /// <summary>Creates a card for a given building defenition </summary>
+        public void AddCard(BuildingDefinition building)
+        {
+            if (building == null) return;
+
+            BuildCard card = Instantiate(cardTemplate, cardParent);
+            card.name = "Card - " + building.displayName;
+            card.gameObject.SetActive(true);
+            card.Setup(building, icons);
+
+            if (card.HeaderButton != null) card.HeaderButton.onClick.AddListener(() => PickCard(card));
+            if (card.DetailsButton != null) card.DetailsButton.onClick.AddListener(() => ToggleCard(card));
+            if (card.PlaceButton != null) card.PlaceButton.onClick.AddListener(() => PlaceCard(card));
+            cards.Add(card);
         }
 
         /// <summary>Updates the money readout and greys out cards the player can't afford.</summary>
