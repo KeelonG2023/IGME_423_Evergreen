@@ -15,6 +15,6 @@ MonoBehaviour:
   tile: {fileID: 1999032249001717720, guid: 3ecb1d3af1e69e44786ebe0529ad8a77, type: 3}
   axes:
   - {x: 1, y: 0}
+  - {x: -1, y: 0}
   - {x: 0, y: 1}
-  - {x: 0, y: -1}
-  Orientation: {x: 0, y: 180, z: 0}
+  Orientation: {x: 0, y: 90, z: 0}
