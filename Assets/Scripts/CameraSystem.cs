@@ -75,7 +75,7 @@ public class CameraSystem : MonoBehaviour
     {
         // Position handling 
         Vector3 moveDirection = transform.forward * moveInput.y + transform.right * moveInput.x;
-        Vector3 position = transform.position + moveDirection * moveSpeed * Time.deltaTime;
+        Vector3 position = transform.position + moveDirection * moveSpeed * (targetFOV / maxFOV) * Time.deltaTime;
         position.x = Mathf.Clamp(position.x, minX, maxX);
         position.z = Mathf.Clamp(position.z, minZ, maxZ);
         transform.position = position;
@@ -106,7 +106,10 @@ public class CameraSystem : MonoBehaviour
 
         // Position handling 
         Vector3 moveDirection = transform.forward * edgeMoveInput.y + transform.right * edgeMoveInput.x;
-        transform.position += moveDirection * moveSpeed * Time.deltaTime;
+        Vector3 position = transform.position + moveDirection * moveSpeed * (targetFOV / maxFOV) * Time.deltaTime;
+        position.x = Mathf.Clamp(position.x, minX, maxX);
+        position.z = Mathf.Clamp(position.z, minZ, maxZ);
+        transform.position = position;
     }
 
     private void HandleDragPan()
@@ -130,7 +133,10 @@ public class CameraSystem : MonoBehaviour
 
         // Position handling 
         Vector3 moveDirection = transform.forward * panMoveInput.y + transform.right * panMoveInput.x;
-        transform.position += moveDirection * moveSpeed * Time.deltaTime;
+        Vector3 position = transform.position + moveDirection * moveSpeed * (targetFOV / maxFOV) * Time.deltaTime;
+        position.x = Mathf.Clamp(position.x, minX, maxX);
+        position.z = Mathf.Clamp(position.z, minZ, maxZ);
+        transform.position = position;
     }
 
     private void HandleRotation()
