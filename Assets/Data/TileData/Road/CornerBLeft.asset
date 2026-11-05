@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c90629740f0bef41a342bccbc5d8ff3, type: 3}
+  m_Name: CornerBLeft
+  m_EditorClassIdentifier: 
+  tile: {fileID: 405222733737758384, guid: 5b578203393474e47aba13df49d6dd71, type: 3}
+  axes:
+  - {x: 1, y: 0}
+  - {x: 0, y: 1}
+  Orientation: {x: 0, y: 90, z: 0}
