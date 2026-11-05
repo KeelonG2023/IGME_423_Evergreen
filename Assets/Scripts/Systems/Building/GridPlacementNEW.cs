@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using Evergreen.Systems;
 using Evergreen.UI;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using static UnityEngine.Tilemaps.Tilemap;
 
 /// <summary>
 /// Places buildings picked in the build menu onto the 3D grid.
@@ -14,6 +16,7 @@ using UnityEngine.InputSystem;
 /// </summary>
 public class GridPlacementNEW : MonoBehaviour
 {
+
     [SerializeField] public static float cellSize = 30f;
     /// <summary>True while a ghost is following the mouse. Other click handlers (tooltips) should stay quiet.</summary>
     public static bool IsPlacing { get; private set; }
@@ -52,6 +55,11 @@ public class GridPlacementNEW : MonoBehaviour
     bool currentCellValid;
     bool hasGroundUnderMouse;
     Vector2 rightClickStart;
+
+    private List<Vector2Int> axesToCheck = new List<Vector2Int>() {new Vector2Int(1, 0),
+        new Vector2Int(0, 1),
+        new Vector2Int(-1, 0),
+        new Vector2Int(0, -1) };
 
     // ---------- Unity lifecycle ----------
 
@@ -200,13 +208,12 @@ public class GridPlacementNEW : MonoBehaviour
         Vector2Int size = Rotated(selected.footprint, quarterTurns);
         currentCells.Clear();
         currentCells.AddRange(BlockCells(WorldToCell(currentPosition), size));
-
         // Centre of the block = halfway between its first and last cell centres.
         Vector3 first = CellToWorld(currentCells[0]);
         Vector3 last = CellToWorld(currentCells[currentCells.Count - 1]);
         Vector3 center = ((first + last) * 0.5f);
 
-        currentPosition = center;
+        currentPosition = new Vector3(center.x, currentPosition.y, center.z);
 
         ghost.transform.SetPositionAndRotation(currentPosition, Quaternion.Euler(0f, quarterTurns * 90f, 0f));
 
@@ -253,17 +260,111 @@ public class GridPlacementNEW : MonoBehaviour
         if (!hasGroundUnderMouse || !currentCellValid) return;
         if (resources != null && !resources.TrySpend(selected.cost)) return;
 
-        GameObject building = Instantiate(selected.prefab, currentPosition, Quaternion.Euler(0f, quarterTurns * 90f, 0f));
-        building.name = selected.displayName;
 
-        BuildingYield yield = building.GetComponent<BuildingYield>();
-        if (yield == null) yield = building.AddComponent<BuildingYield>();
-        yield.ApplyDefinition(selected);
+        GameObject objectToPlace = selected.prefab;
+        Quaternion orientation = Quaternion.Euler(0f, quarterTurns * 90f, 0f);
+        //if this cast succeeds that means it's a tiled building which means it'll attempt to update itself and neighbors
+        if (selected is TiledBuilding tile)
+        {
+            List<Vector2Int> occupiedAxes = new List<Vector2Int>();
 
-        occupiedCells.UnionWith(currentCells);
+            //find the tiles of the same type that are beside this one
+            foreach (Vector2Int axis in axesToCheck)
+            {
+                TiledBuilding cell = grid.GetAt(currentCells[0].x + axis.x, currentCells[0].z + axis.y) as TiledBuilding;
+
+               if (cell && cell.type == tile.type)
+               {
+                    occupiedAxes.Add(axis);
+               }
+            }
+
+            //change prefab type depending on occipied axes
+            foreach (BuildTileDefinition t in tile.tiles)
+            {
+                if (t.axes.Count == occupiedAxes.Count && new HashSet<Vector2Int>(t.axes).SetEquals(occupiedAxes))
+                {
+                    objectToPlace = t.tile;
+                    orientation = Quaternion.Euler(t.Orientation);
+                    break;
+                }
+            }
+            GameObject building = Instantiate(objectToPlace, currentPosition, orientation);
+            building.name = selected.displayName;
+
+            BuildingYield yield = building.GetComponent<BuildingYield>();
+            if (yield == null) yield = building.AddComponent<BuildingYield>();
+            yield.ApplyDefinition(selected);
+
+            occupiedCells.UnionWith(currentCells);
+            grid.SetBuilding(yield.Definition, currentCells, building);
+
+            foreach (Vector2Int axis in occupiedAxes)
+            {
+                UpdateBuildingTile(new Vector2Int(currentCells[0].x + axis.x, currentCells[0].z + axis.y));
+            }
+        }
+        else
+        {
+            GameObject building = Instantiate(objectToPlace, currentPosition, orientation);
+            building.name = selected.displayName;
+
+            BuildingYield yield = building.GetComponent<BuildingYield>();
+            if (yield == null) yield = building.AddComponent<BuildingYield>();
+            yield.ApplyDefinition(selected);
+
+            occupiedCells.UnionWith(currentCells);
+            grid.SetBuilding(yield.Definition, currentCells, building);
+        }
+            
+        
 
         bool canAffordAnother = resources == null || resources.CanAfford(selected.cost);
         if (!keepPlacingAfterBuild || !canAffordAnother) StopPlacing(true);
+    }
+
+    public void UpdateBuildingTile(Vector2Int at)
+    {
+        GridCell cell = grid.GetCell(at.x, at.y);
+        TiledBuilding tile = grid.GetAt(at.x, at.y) as TiledBuilding;
+
+        if (tile == null) return;
+
+        GameObject newObject = null;
+        Quaternion newOrientation = new Quaternion();
+        List<Vector2Int> occupiedAxes = new List<Vector2Int>();
+
+        //find the tiles of the same type that are beside this one
+        foreach (Vector2Int axis in axesToCheck)
+        {
+            TiledBuilding c = grid.GetAt(at.x + axis.x, at.y + axis.y) as TiledBuilding;
+
+            if (c && c.type == tile.type)
+            {
+                occupiedAxes.Add(axis);
+            }
+        }
+
+        foreach (BuildTileDefinition t in tile.tiles)
+        {
+            if (t.axes.Count == occupiedAxes.Count && new HashSet<Vector2Int>(t.axes).SetEquals(occupiedAxes))
+            {
+                newObject = t.tile;
+                newOrientation = Quaternion.Euler(t.Orientation);
+                break;
+            }
+        }
+        if (newObject != null)
+        {
+            
+            GameObject oldObject = cell.gameobject;
+            print(oldObject);
+            GameObject newInstance = Instantiate(newObject, oldObject.transform.position, newOrientation);
+            newInstance.name = oldObject.name;
+            //im sure there needs to be some data transfer between building yields but roads do nothing atm so im not gonna worry about it tonight
+            Destroy(oldObject);
+            cell.gameobject = newInstance;
+        }
     }
 
     /// <summary>Frees the cells a building covers, e.g. when it is demolished.</summary>

@@ -34,10 +34,36 @@ public class PlaceableGrid : MonoBehaviour
     {
         foreach (Vector3Int pos in allBuildingPos)
         {
-            (int x, int y) = WorldToGridPosition(pos);
-
-            grid[x, y].SetBuilding(building);
+            grid[pos.x, pos.z].SetBuilding(building);
         }
+
+    }
+    public void SetBuilding(BuildingDefinition building, List<Vector3Int> allBuildingPos, GameObject objectAt)
+    {
+        foreach (Vector3Int pos in allBuildingPos)
+        {
+            grid[pos.x, pos.z].SetBuilding(building, objectAt);
+
+        }
+    }
+
+
+    public BuildingDefinition GetAt(int x, int y)
+    {
+        if (x < 0 || y < 0 || x >= width || y >= height) return null;
+
+        GridCell cell = grid[x, y];
+
+        if (cell.IsEmpty()) return null;
+
+        return cell.Building;
+    }
+
+    public GridCell GetCell(int x, int y)
+    {
+        if (x < 0 || y < 0 || x >= width || y >= height) return null;
+
+        return grid[x, y];
     }
 
     /// <summary>
@@ -48,7 +74,7 @@ public class PlaceableGrid : MonoBehaviour
     public bool CanBuild(List<Vector3Int> allBuildingPos)
     {
         foreach (Vector3Int pos in allBuildingPos)
-        {
+        { 
             int x = pos.x;
             int y = pos.z;
             if (x < 0 || x >= width || y < 0 || y >= height)
@@ -117,10 +143,27 @@ public class PlaceableGrid : MonoBehaviour
 public class GridCell
 {
     private BuildingDefinition building;
+    private GameObject objectAt;
+
+    public GameObject gameobject
+    {
+        get { return objectAt; }
+        set { objectAt = value; }
+    }
+    public BuildingDefinition Building
+    {
+        get { return building; }
+    }
 
     public void SetBuilding(BuildingDefinition build)
     {
         building = build;
+    }
+
+    public void SetBuilding(BuildingDefinition build, GameObject at)
+    {
+        building = build;
+        objectAt = at;
     }
 
     public bool IsEmpty()
