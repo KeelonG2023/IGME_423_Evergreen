@@ -16,7 +16,13 @@ public class DisAndReappearFunc : MonoBehaviour
         happinessButton.onClick.AddListener(hideButton);
         happinessButton.onClick.AddListener(showButton);
         happinessButton.gameObject.SetActive(false);
+        buttonDecay();
         spawnRate();
+    }
+
+    public void buttonDecay()
+    {
+        Destroy(happinessButton.gameObject, 120f);
     }
 
     public void spawnRate()
