@@ -119,6 +119,67 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &200789480
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1056267808814593153, guid: 2029e9b5a0d44a84989123619ebe4c35, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1056267808814593153, guid: 2029e9b5a0d44a84989123619ebe4c35, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1056267808814593153, guid: 2029e9b5a0d44a84989123619ebe4c35, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1056267808814593153, guid: 2029e9b5a0d44a84989123619ebe4c35, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1056267808814593153, guid: 2029e9b5a0d44a84989123619ebe4c35, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1056267808814593153, guid: 2029e9b5a0d44a84989123619ebe4c35, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1056267808814593153, guid: 2029e9b5a0d44a84989123619ebe4c35, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1056267808814593153, guid: 2029e9b5a0d44a84989123619ebe4c35, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1056267808814593153, guid: 2029e9b5a0d44a84989123619ebe4c35, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1056267808814593153, guid: 2029e9b5a0d44a84989123619ebe4c35, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8006154608840934245, guid: 2029e9b5a0d44a84989123619ebe4c35, type: 3}
+      propertyPath: m_Name
+      value: Simulation
+      objectReference: {fileID: 0}
+    - target: {fileID: 9161285029739790744, guid: 2029e9b5a0d44a84989123619ebe4c35, type: 3}
+      propertyPath: secondsPerYear
+      value: 60
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2029e9b5a0d44a84989123619ebe4c35, type: 3}
 --- !u!1 &243989474
 GameObject:
   m_ObjectHideFlags: 0
@@ -233,6 +294,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: factorybuilding_b
       objectReference: {fileID: 0}
+    - target: {fileID: 5420109094444493013, guid: 4db8473c5b68d454390dc88b7041b1fc, type: 3}
+      propertyPath: definition
+      value: 
+      objectReference: {fileID: 11400000, guid: 9a9cf8ff38f9894479af2c1b7cb3c0fc, type: 2}
+    - target: {fileID: 5420109094444493013, guid: 4db8473c5b68d454390dc88b7041b1fc, type: 3}
+      propertyPath: lifespanYears
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 5420109094444493013, guid: 4db8473c5b68d454390dc88b7041b1fc, type: 3}
+      propertyPath: yearlyYield.happiness
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 5935648183643146929, guid: 4db8473c5b68d454390dc88b7041b1fc, type: 3}
       propertyPath: m_LocalPosition.x
       value: -6.1
@@ -317,7 +390,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -68, y: 163}
+  m_AnchoredPosition: {x: -730, y: 163}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1064037058
@@ -426,8 +499,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdea1f1cf856d0c49a98a3f8ea6d5f0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resourceManager: {fileID: 0}
   happinessButton: {fileID: 1064037058}
+  targetObject: {fileID: 1788200604}
+  delayBySeconds: 0
 --- !u!1 &1094750332
 GameObject:
   m_ObjectHideFlags: 0
@@ -762,3 +836,4 @@ SceneRoots:
   - {fileID: 243989478}
   - {fileID: 1916890735}
   - {fileID: 572362097}
+  - {fileID: 200789480}
