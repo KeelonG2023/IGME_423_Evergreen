@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d2b7f1e9c3a4f6b8e0d1c2a3b4f5e6d, type: 3}
+  m_Name: HappinessRatings
+  m_EditorClassIdentifier: 
+  levels:
+  - label: Vomit
+    emoji: {fileID: 2100097941416769578, guid: a06a70f50cb61104c80af150c4319c11, type: 3}
+    popUpChancePercent: 0
+    pointsPerClick: 0
+  - label: Disgusted
+    emoji: {fileID: 534002389781278355, guid: 3c70ac30fe441a24aa2b468978d88ef9, type: 3}
+    popUpChancePercent: 5
+    pointsPerClick: 1
+  - label: Happy Little
+    emoji: {fileID: 21300000, guid: a0217e577a743554a904fa8098ecc09d, type: 3}
+    popUpChancePercent: 10
+    pointsPerClick: 2
+  - label: Happy
+    emoji: {fileID: 6266176060360064, guid: 8b2746409d0599f40b14dae8520d26d2, type: 3}
+    popUpChancePercent: 15
+    pointsPerClick: 3
+  - label: Love
+    emoji: {fileID: -205270267638800340, guid: da7ed355b9b60884f947f9cf8488ac81, type: 3}
+    popUpChancePercent: 25
+    pointsPerClick: 5

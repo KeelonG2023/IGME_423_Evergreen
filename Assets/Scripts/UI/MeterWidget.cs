@@ -23,6 +23,12 @@ namespace Evergreen.UI
         }
 
         /// <summary>Shows a signed per-year change, green if positive and coral if negative.</summary>
+        /// <summary>Hides the per-year line (for resources with no passive change).</summary>
+        public void ClearDelta()
+        {
+            if (perYearChangeText != null) perYearChangeText.text = "";
+        }
+
         public void SetDelta(float perYear, string prefix = "", string suffix = "")
         {
             if (perYearChangeText == null) return;

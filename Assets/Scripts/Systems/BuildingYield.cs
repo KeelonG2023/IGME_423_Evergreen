@@ -36,6 +36,8 @@ namespace Evergreen.Systems
         [Tooltip("Is this building currently producing? This shouldn't be touched unless something changes the behavior of BuildingYield (e.g RequireAdjacency)")]
         public bool producing = true;
 
+        [SerializeField] HappinessRating happinessRating = HappinessRating.HappyLittle;
+
         [Tooltip("Optional. This sprite turns grey when the building expires.")]
         [FormerlySerializedAs("tintOnExpire")]
         [SerializeField] SpriteRenderer spriteToGreyOutOnExpire;
@@ -61,6 +63,18 @@ namespace Evergreen.Systems
         public string DisplayName => definition != null ? definition.displayName : displayName;
         public Sprite Icon => definition != null ? definition.icon : null;
         public int LifespanYears => definition != null ? definition.lifespanYears : lifespanYears;
+
+        /// <summary>Base rating plus every installed upgrade's steps, kept within Vomit-Love.</summary>
+        public HappinessRating HappinessRating
+        {
+            get
+            {
+                int value = (int)(definition != null ? definition.happinessRating : happinessRating);
+                foreach (BuildingUpgrade upgrade in installedUpgrades)
+                    if (upgrade != null) value += upgrade.happinessRatingChange;
+                return HappinessRatings.Clamp(value);
+            }
+        }
 
         /// <summary>How many ticks this building has existed for.</summary>
         public int AgeTicks { get; private set; }

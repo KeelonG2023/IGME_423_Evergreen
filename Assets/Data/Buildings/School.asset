@@ -22,7 +22,8 @@ MonoBehaviour:
     money: -60
     eco: 0
     population: 15
-    happiness: 4
+    happiness: 0
+  happinessRating: 4
   lifespanYears: 60
   footprint: {x: 2, y: 2}
   prefab: {fileID: 5042378834057482268, guid: e55b80c7c67d99f4d9b3c46b2da4ff52, type: 3}

@@ -28,8 +28,11 @@ namespace Evergreen.Systems
         [Tooltip("One-time money cost to place it.")]
         [Min(0f)] public float cost = 500f;
 
-        [Tooltip("Per in-game year. Negative = upkeep / damage.")]
+        [Tooltip("Per in-game year. Negative = upkeep / damage. Happiness here is ignored: happiness only comes from pop-ups.")]
         public ResourceYield yearlyYield;
+
+        [Tooltip("How much people like it, Vomit (1) to Love (5). Decides how often it spawns happiness pop-ups and how much they give.")]
+        public HappinessRating happinessRating = HappinessRating.HappyLittle;
 
         [Tooltip("Years before the building expires and stops yielding. 0 = never.")]
         [Min(0)] public int lifespanYears = 30;

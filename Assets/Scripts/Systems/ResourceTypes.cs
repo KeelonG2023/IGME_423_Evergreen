@@ -13,7 +13,7 @@ namespace Evergreen.Systems
         public float eco;
         public float population;
 
-        [UnityEngine.Tooltip("Percentage points. Happiness is clamped to 0-100 and is not a fail state.")]
+        [UnityEngine.Tooltip("Happiness points. Earned and spent like a currency; never below 0 and not a fail state.")]
         public float happiness;
 
         public ResourceYield(float money, float eco, float population, float happiness = 0f)
@@ -52,7 +52,7 @@ namespace Evergreen.Systems
                 yield.happiness * scale);
 
         public override string ToString() =>
-            $"Money {money:0.##}, Eco {eco:0.##}, Pop {population:0.##}, Happy {happiness:0.##}%";
+            $"Money {money:0.##}, Eco {eco:0.##}, Pop {population:0.##}, Happy {happiness:0.##}";
     }
 
     /// <summary>

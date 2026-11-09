@@ -32,6 +32,8 @@ namespace Evergreen.UI
         [SerializeField] MeterWidget eco;
         [SerializeField] MeterWidget population;
         [SerializeField] MeterWidget happiness;
+        [Tooltip("Happiness points that fill the happiness bar. Points can go higher; the bar just stays full.")]
+        [SerializeField, Min(1f)] float happinessFullAt = 100f;
 
         [Header("Hover tooltips")]
         [Tooltip("Show the resource name when the mouse is over a meter.")]
@@ -111,9 +113,9 @@ namespace Evergreen.UI
             }
             if (happiness != null)
             {
-                happiness.SetValue($"{Mathf.RoundToInt(resources.Happiness)}%");
-                happiness.SetDelta(yearlyNet.happiness, "", "%");
-                happiness.SetFill(resources.Happiness / 100f);
+                happiness.SetValue($"{Mathf.FloorToInt(resources.Happiness):N0}");
+                happiness.ClearDelta(); // no passive happiness
+                happiness.SetFill(resources.Happiness / happinessFullAt);
             }
         }
 

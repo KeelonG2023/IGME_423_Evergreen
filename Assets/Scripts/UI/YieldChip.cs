@@ -9,6 +9,13 @@ namespace Evergreen.UI
         [SerializeField] Image icon;
         [SerializeField] Text label;
 
+        /// <summary>Just an icon (e.g. a happiness emoji), no number.</summary>
+        public void SetIconOnly(Sprite sprite)
+        {
+            if (icon != null) icon.sprite = sprite;
+            if (label != null) label.gameObject.SetActive(false);
+        }
+
         public void Set(Sprite resourceIcon, float perYear, string prefix = "", string suffix = "")
         {
             if (icon != null) icon.sprite = resourceIcon;

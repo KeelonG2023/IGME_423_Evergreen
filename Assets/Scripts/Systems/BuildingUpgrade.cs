@@ -27,6 +27,9 @@ namespace Evergreen.Systems
         [Tooltip("Added to the building's yearly yield once installed. Negative = extra upkeep / damage.")]
         public ResourceYield yearlyChange;
 
+        [Tooltip("Steps added to the building's happiness rating (e.g. +1 = Happy -> Love). Kept within Vomit-Love.")]
+        [Range(-4, 4)] public int happinessRatingChange;
+
         [Header("Research")]
         [Tooltip("If ticked, the upgrade menu hides this until it's researched in the skill tree.")]
         public bool requiresResearch;

@@ -16,5 +16,6 @@ MonoBehaviour:
   eco: {fileID: 21300000, guid: df71a952ff8ad784d8848c7f6b9a3dfe, type: 3}
   population: {fileID: -7627237033547488594, guid: 9471eb20530a5f6428f48346140e1fb5, type: 3}
   happiness: {fileID: 21300000, guid: a0217e577a743554a904fa8098ecc09d, type: 3}
+  happinessRatings: {fileID: 11400000, guid: 9e4c2a7b1d3f4e5a8c6b0d2e4f6a8c1b, type: 2}
   year: {fileID: -5806429548128397179, guid: a3dbb96fd0bd29341a87b5dca4a60ae4, type: 3}
   locked: {fileID: 7575768594493796255, guid: db9764c9453b3e349adb49b714fe6116, type: 3}
