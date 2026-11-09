@@ -1662,8 +1662,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 834975400302973472, guid: acf33570e7f201944a82fb066e805623, type: 3}
+      propertyPath: plane
+      value: 
+      objectReference: {fileID: 585311704}
+    - target: {fileID: 834975400302973472, guid: acf33570e7f201944a82fb066e805623, type: 3}
       propertyPath: dragSpeed
       value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 834975400302973472, guid: acf33570e7f201944a82fb066e805623, type: 3}
+      propertyPath: moveSpeed
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 3745716938879314142, guid: acf33570e7f201944a82fb066e805623, type: 3}
       propertyPath: m_LocalPosition.x

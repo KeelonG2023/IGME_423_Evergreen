@@ -8,6 +8,7 @@ using UnityEditor;
 public class CameraSystem : MonoBehaviour
 {
     [SerializeField] private CinemachineVirtualCamera cinemachineCamera;
+    [SerializeField] private GameObject plane;
     [SerializeField] private float moveSpeed;
     [SerializeField] private float dragSpeed;
     [SerializeField] private float rotateSpeed;
@@ -54,10 +55,11 @@ public class CameraSystem : MonoBehaviour
 
     private void Update()
     {
+        //if (HandleRotation()) return;
+        HandleRotation();
         HandleMovement();
         HandleEdgeScrolling();
         HandleDragPan();
-        HandleRotation();
         HandleZoom();
     }
 
@@ -76,8 +78,8 @@ public class CameraSystem : MonoBehaviour
         // Position handling 
         Vector3 moveDirection = transform.forward * moveInput.y + transform.right * moveInput.x;
         Vector3 position = transform.position + moveDirection * moveSpeed * (targetFOV / maxFOV) * Time.deltaTime;
-        position.x = Mathf.Clamp(position.x, minX, maxX);
-        position.z = Mathf.Clamp(position.z, minZ, maxZ);
+        //position.x = Mathf.Clamp(position.x, minX, maxX);
+        //position.z = Mathf.Clamp(position.z, minZ, maxZ);
         transform.position = position;
         //transform.position += moveDirection * moveSpeed * Time.deltaTime;
     }
@@ -107,8 +109,8 @@ public class CameraSystem : MonoBehaviour
         // Position handling 
         Vector3 moveDirection = transform.forward * edgeMoveInput.y + transform.right * edgeMoveInput.x;
         Vector3 position = transform.position + moveDirection * moveSpeed * (targetFOV / maxFOV) * Time.deltaTime;
-        position.x = Mathf.Clamp(position.x, minX, maxX);
-        position.z = Mathf.Clamp(position.z, minZ, maxZ);
+        //position.x = Mathf.Clamp(position.x, minX, maxX);
+        //position.z = Mathf.Clamp(position.z, minZ, maxZ);
         transform.position = position;
     }
 
@@ -134,14 +136,18 @@ public class CameraSystem : MonoBehaviour
         // Position handling 
         Vector3 moveDirection = transform.forward * panMoveInput.y + transform.right * panMoveInput.x;
         Vector3 position = transform.position + moveDirection * moveSpeed * (targetFOV / maxFOV) * Time.deltaTime;
-        position.x = Mathf.Clamp(position.x, minX, maxX);
-        position.z = Mathf.Clamp(position.z, minZ, maxZ);
+        //position.x = Mathf.Clamp(position.x, minX, maxX);
+        //position.z = Mathf.Clamp(position.z, minZ, maxZ);
         transform.position = position;
     }
 
-    private void HandleRotation()
+    private bool HandleRotation()
     {
-        transform.eulerAngles += new Vector3(0.0f, rotateDirection * rotateSpeed * Time.deltaTime, 0.0f);
+        transform.eulerAngles -= new Vector3(0.0f, rotateDirection * rotateSpeed * Time.deltaTime, 0.0f);
+        Vector3 moveDirection = transform.right * rotateDirection;
+        Vector3 position = transform.position + moveDirection * moveSpeed * Time.deltaTime;
+        transform.position = position;
+        return (rotateDirection != 0);
     }
 
     private void HandleZoom()

@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Icon_WindTurbine_0: 6504018021136759932
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

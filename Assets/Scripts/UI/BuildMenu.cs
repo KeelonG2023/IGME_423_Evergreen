@@ -136,6 +136,7 @@ namespace Evergreen.UI
             if (card.DetailsButton != null) card.DetailsButton.onClick.AddListener(() => ToggleCard(card));
             if (card.PlaceButton != null) card.PlaceButton.onClick.AddListener(() => PlaceCard(card));
             cards.Add(card);
+            SetBuildCardsVisible(true);
         }
 
         /// <summary>Updates the money readout and greys out cards the player can't afford.</summary>
