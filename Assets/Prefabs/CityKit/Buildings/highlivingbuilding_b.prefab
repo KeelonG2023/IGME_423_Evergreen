@@ -161,4 +161,6 @@ MonoBehaviour:
     population: 0
     happiness: 0
   lifespanYears: 0
+  producing: 1
   spriteToGreyOutOnExpire: {fileID: 0}
+  installedUpgrades: []

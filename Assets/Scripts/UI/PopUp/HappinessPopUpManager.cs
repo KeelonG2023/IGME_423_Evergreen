@@ -111,7 +111,7 @@ namespace Evergreen.UI
             for (int i = active.Count - 1; i >= 0; i--)
             {
                 PopUp p = active[i];
-                if (p.building == null || p.building.IsExpired || resources.IsGameOver) { Remove(i); continue; }
+                if (p.building == null || p.building.IsExpired || !p.building.producing || resources.IsGameOver) { Remove(i); continue; }
 
                 p.age += dt;
                 if (p.age >= lifetimeSeconds) { Remove(i); continue; }
@@ -132,7 +132,7 @@ namespace Evergreen.UI
             foreach (BuildingYield b in buildings)
             {
                 if (active.Count >= maxActive) break;
-                if (b.IsExpired || buildingsWithPopUp.Contains(b)) continue;
+                if (b.IsExpired || !b.producing || buildingsWithPopUp.Contains(b)) continue; // not producing = e.g. failed RequireAdjacency
                 HappinessRatings.Level level = ratings.Get(b.HappinessRating);
                 if (level == null || level.popUpChancePercent <= 0f || level.pointsPerClick <= 0f) continue;
                 if (Random.Range(0f, 100f) < level.popUpChancePercent) Spawn(b, level);

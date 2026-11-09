@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Evergreen.Systems;
 using NUnit.Framework;
@@ -16,6 +17,17 @@ public class PlaceableGrid : MonoBehaviour
 
     [SerializeField] private bool DrawGrid;
 
+    public static PlaceableGrid Instance;
+
+    //vectors to check (compared to a base grid space) to identify adjacency. 
+    public  static List<Vector2Int> axesToCheck = new List<Vector2Int>() {
+        new Vector2Int(1, 0),
+        new Vector2Int(0, 1),
+        new Vector2Int(-1, 0),
+        new Vector2Int(0, -1) };
+
+    //Fires when the grid is updated (AKA when a new object is placed(or broken?)).
+    public static event Action<PlaceableGrid> GridUpdate;
     private void Start()
     {
         grid = new GridCell[width, height];
@@ -28,6 +40,8 @@ public class PlaceableGrid : MonoBehaviour
             }
 
         }
+
+        if (Instance == null) Instance = this;
     }
 
     public void SetBuilding(BuildingDefinition building, List<Vector3Int> allBuildingPos)
@@ -40,11 +54,16 @@ public class PlaceableGrid : MonoBehaviour
     }
     public void SetBuilding(BuildingDefinition building, List<Vector3Int> allBuildingPos, GameObject objectAt)
     {
+        BuildingYield buildData = objectAt.GetComponent<BuildingYield>();
+
         foreach (Vector3Int pos in allBuildingPos)
         {
-            grid[pos.x, pos.z].SetBuilding(building, objectAt);
+            grid[pos.x, pos.z].SetBuilding(building, objectAt, new Vector2Int(pos.x, pos.z));
 
+            if(buildData != null) buildData.footprint.Add(grid[pos.x, pos.z]);
         }
+        
+        GridUpdate?.Invoke(this);
     }
 
 
@@ -64,6 +83,40 @@ public class PlaceableGrid : MonoBehaviour
         if (x < 0 || y < 0 || x >= width || y >= height) return null;
 
         return grid[x, y];
+    }
+
+    public List<GridCell> GetAdjacency(int x, int y)
+    {
+        List<GridCell> adjacentCells = new List<GridCell>();
+        GridCell cellAt = GetCell(x, y);
+        foreach (Vector2Int axis in axesToCheck)
+        {
+            GridCell cell = GetCell(x + axis.x, y + axis.y);
+            if (cell.gameobject != null)
+            {
+                BuildingYield data = cell.gameobject.GetComponent<BuildingYield>();
+
+                if (data != null && data.gameObject != cellAt.gameobject)
+                {
+                    adjacentCells.Add(cell);
+                }
+            }
+        }
+
+        return adjacentCells;
+    }
+
+    public List<GridCell> GetAdjacency(List<GridCell> cells)
+    {
+        List<GridCell> adjacentCells = new List<GridCell>();
+        
+        foreach (GridCell cell in cells)
+        {
+            Vector2Int vec = cell.Position;
+            adjacentCells.AddRange(GetAdjacency(vec.x, vec.y));
+        }
+
+        return adjacentCells;
     }
 
     /// <summary>
@@ -144,7 +197,7 @@ public class GridCell
 {
     private BuildingDefinition building;
     private GameObject objectAt;
-
+    private Vector2Int position;
     public GameObject gameobject
     {
         get { return objectAt; }
@@ -155,6 +208,10 @@ public class GridCell
         get { return building; }
     }
 
+    public Vector2Int Position
+    {
+        get { return position; }
+    }
     public void SetBuilding(BuildingDefinition build)
     {
         building = build;
@@ -164,6 +221,13 @@ public class GridCell
     {
         building = build;
         objectAt = at;
+    }
+
+    public void SetBuilding(BuildingDefinition build, GameObject at, Vector2Int pos)
+    {
+        building = build;
+        objectAt = at;
+        position = pos;
     }
 
     public bool IsEmpty()

@@ -56,10 +56,7 @@ public class GridPlacementNEW : MonoBehaviour
     bool hasGroundUnderMouse;
     Vector2 rightClickStart;
 
-    private List<Vector2Int> axesToCheck = new List<Vector2Int>() {new Vector2Int(1, 0),
-        new Vector2Int(0, 1),
-        new Vector2Int(-1, 0),
-        new Vector2Int(0, -1) };
+    
 
     // ---------- Unity lifecycle ----------
 
@@ -269,7 +266,7 @@ public class GridPlacementNEW : MonoBehaviour
             List<Vector2Int> occupiedAxes = new List<Vector2Int>();
 
             //find the tiles of the same type that are beside this one
-            foreach (Vector2Int axis in axesToCheck)
+            foreach (Vector2Int axis in PlaceableGrid.axesToCheck)
             {
                 TiledBuilding cell = grid.GetAt(currentCells[0].x + axis.x, currentCells[0].z + axis.y) as TiledBuilding;
 
@@ -315,6 +312,7 @@ public class GridPlacementNEW : MonoBehaviour
 
             occupiedCells.UnionWith(currentCells);
             grid.SetBuilding(yield.Definition, currentCells, building);
+            
         }
             
         
@@ -335,7 +333,7 @@ public class GridPlacementNEW : MonoBehaviour
         List<Vector2Int> occupiedAxes = new List<Vector2Int>();
 
         //find the tiles of the same type that are beside this one
-        foreach (Vector2Int axis in axesToCheck)
+        foreach (Vector2Int axis in PlaceableGrid.axesToCheck)
         {
             TiledBuilding c = grid.GetAt(at.x + axis.x, at.y + axis.y) as TiledBuilding;
 
@@ -358,7 +356,6 @@ public class GridPlacementNEW : MonoBehaviour
         {
             
             GameObject oldObject = cell.gameobject;
-            print(oldObject);
             GameObject newInstance = Instantiate(newObject, oldObject.transform.position, newOrientation);
             newInstance.name = oldObject.name;
             //im sure there needs to be some data transfer between building yields but roads do nothing atm so im not gonna worry about it tonight
