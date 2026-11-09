@@ -33,14 +33,21 @@ namespace Evergreen.Systems
         [Tooltip("Years before the building expires. 0 = never.")]
         [SerializeField, Min(0)] int lifespanYears;
 
+        [Tooltip("Is this building currently producing? This shouldn't be touched unless something changes the behavior of BuildingYield (e.g RequireAdjacency)")]
+        public bool producing = true;
+
         [Tooltip("Optional. This sprite turns grey when the building expires.")]
         [FormerlySerializedAs("tintOnExpire")]
         [SerializeField] SpriteRenderer spriteToGreyOutOnExpire;
+
+        [Tooltip("List of all GridCells this building takes up.")]
+        [SerializeField] public List<GridCell> footprint = new List<GridCell>();
 
         [Header("Upgrades")]
         [Tooltip("Upgrades bought for this building. Filled at runtime by the upgrade panel.")]
         [SerializeField] List<BuildingUpgrade> installedUpgrades = new List<BuildingUpgrade>();
 
+        
         /// <summary>Fires on this building whenever an upgrade is installed.</summary>
         public event Action<BuildingYield> UpgradesChanged;
 
@@ -82,7 +89,7 @@ namespace Evergreen.Systems
             get
             {
                 if (IsExpired) return ResourceYield.Zero;
-                return BaseYearlyYield + UpgradeBonus;
+                return producing? BaseYearlyYield + UpgradeBonus : ResourceYield.Zero;
             }
             // Setting a custom yield detaches the definition so the custom value is actually used.
             set
