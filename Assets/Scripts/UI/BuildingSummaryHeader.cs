@@ -7,7 +7,7 @@ namespace Evergreen.UI
     /// <summary>
     /// Compact two-line summary of the selected building, shown at the top of the upgrade list.
     ///   Line 1: name (left) · "40 yrs" (right)
-    ///   Line 2: inline yields, icon + signed number, no chip backgrounds ("coin +300   recycle −20   happy −4%")
+    ///   Line 2: inline yields, icon + signed number, no chip backgrounds ("coin +300   recycle −20   happy-emoji")
     /// Built entirely in code by UpgradeMenu so it needs no prefab. Icons come from ResourceIcons (Art/UI).
     /// </summary>
     public class BuildingSummaryHeader : MonoBehaviour
@@ -99,12 +99,23 @@ namespace Evergreen.UI
             int slot = 0;
             if (icons != null)
             {
+                FillRating(ref slot, icons, building.HappinessRating);
                 Fill(ref slot, icons.money, yearly.money, "");
                 Fill(ref slot, icons.eco, yearly.eco, "");
                 Fill(ref slot, icons.population, yearly.population, "");
-                Fill(ref slot, icons.happiness, yearly.happiness, "%");
             }
             for (int i = slot; i < 4; i++) yieldIcons[i].transform.parent.gameObject.SetActive(false);
+        }
+
+        /// <summary>Happiness rating emoji with no number.</summary>
+        void FillRating(ref int slot, ResourceIcons icons, HappinessRating rating)
+        {
+            if (slot >= 4) return;
+            Sprite emoji = icons.happinessRatings != null ? icons.happinessRatings.EmojiFor(rating) : null;
+            yieldIcons[slot].transform.parent.gameObject.SetActive(true);
+            yieldIcons[slot].sprite = emoji != null ? emoji : icons.happiness;
+            yieldTexts[slot].text = "";
+            slot++;
         }
 
         void Fill(ref int slot, Sprite sprite, float perYear, string suffix)

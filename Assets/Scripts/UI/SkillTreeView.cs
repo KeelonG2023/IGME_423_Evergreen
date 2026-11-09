@@ -431,9 +431,27 @@ namespace Evergreen.UI
                 AddChip(kit, bg.transform, icons.money, yearly.money, "", ref chipX, chipY);
                 AddChip(kit, bg.transform, icons.eco, yearly.eco, "", ref chipX, chipY);
                 AddChip(kit, bg.transform, icons.population, yearly.population, "", ref chipX, chipY);
-                AddChip(kit, bg.transform, icons.happiness, yearly.happiness, "%", ref chipX, chipY);
+                if (node.building != null)
+                    AddRatingChip(kit, bg.transform, node.building.happinessRating, ref chipX, chipY);
+                else
+                    AddChip(kit, bg.transform, icons.happiness, node.upgrade.happinessRatingChange, "", ref chipX, chipY);
             }
             return ui;
+        }
+
+        /// <summary>Emoji-only chip for a building's happiness rating.</summary>
+        void AddRatingChip(Kit kit, Transform parent, HappinessRating rating, ref float x, float y)
+        {
+            const float width = 34f, height = 32f;
+            if (x + width > cardWidth - 10f) return;
+            Sprite emoji = icons.happinessRatings != null ? icons.happinessRatings.EmojiFor(rating) : null;
+
+            Image chip = MakeImage(kit, "Happiness Chip", parent, BadgeColor);
+            chip.raycastTarget = false;
+            Place(chip.rectTransform, new Vector2(x, y), new Vector2(width, height));
+            Image chipIcon = MakeIcon("Icon", chip.transform, emoji != null ? emoji : icons.happiness);
+            Place(chipIcon.rectTransform, new Vector2(6f, 5f), new Vector2(22f, 22f));
+            x += width + 6f;
         }
 
         /// <summary>One small "icon +value" chip; skipped for zero values or when the row is full.</summary>

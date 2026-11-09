@@ -13,6 +13,9 @@ namespace Evergreen.UI
         public Sprite eco;
         public Sprite population;
         public Sprite happiness;
+
+        [Tooltip("Emoji + pop-up tuning for the five happiness ratings. Cards show the emoji instead of a happiness number.")]
+        public Evergreen.Systems.HappinessRatings happinessRatings;
         public Sprite year;
 
         [Tooltip("Shown on build cards the player can't afford.")]

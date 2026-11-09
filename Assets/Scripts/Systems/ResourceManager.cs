@@ -40,7 +40,8 @@ namespace Evergreen.Systems
         [SerializeField] float startingMoney = 1000f;
         [SerializeField] float startingEco = 50f;
         [SerializeField] float startingPopulation = 100f;
-        [SerializeField, Range(0f, 100f)] float startingHappiness = 60f;
+        [Tooltip("Happiness points at the start. Points are earned (pop-ups, buildings) and spent on research.")]
+        [SerializeField, Min(0f)] float startingHappiness = 0f;
 
         // ---------- Current values ----------
 
@@ -48,7 +49,7 @@ namespace Evergreen.Systems
         public float Eco { get; private set; }
         public float Population { get; private set; }
 
-        /// <summary>0-100. Not a fail state.</summary>
+        /// <summary>Happiness points. Starts at 0, never goes below 0, no upper limit. Not a fail state.</summary>
         public float Happiness { get; private set; }
 
         public ResourceYield Current => new ResourceYield(Money, Eco, Population, Happiness);
@@ -141,6 +142,7 @@ namespace Evergreen.Systems
 
             // Yields are per year, so each tick applies its share of the year.
             ResourceYield deltaThisTick = GetYearlyNet() * (1f / tickingClock.TicksPerYear);
+            deltaThisTick.happiness = 0f; // No passive happiness: it's only earned by clicking pop-ups.
             LastTickDelta = deltaThisTick;
             Apply(deltaThisTick);
         }
@@ -150,7 +152,7 @@ namespace Evergreen.Systems
             Money += delta.money;
             Eco += delta.eco;
             Population += delta.population;
-            Happiness = Mathf.Clamp(Happiness + delta.happiness, 0f, 100f);
+            Happiness = Mathf.Max(0f, Happiness + delta.happiness);
             ResourcesChanged?.Invoke(this);
             CheckForGameOver();
         }
@@ -208,15 +210,18 @@ namespace Evergreen.Systems
             GameOver?.Invoke(reason);
         }
 
+        /// <summary>Removes happiness points (e.g. research). Won't go below 0; check the balance first.</summary>
         public void SpendHappiness(float amount)
         {
-            Happiness -= amount;
+            Happiness = Mathf.Max(0f, Happiness - amount);
+            ResourcesChanged?.Invoke(this);
         }
 
-        // Adds a vaule from the parameter to the happiness variable
+        /// <summary>Adds happiness points (e.g. from a clicked pop-up).</summary>
         public void GainHappiness(float amount)
         {
-            Happiness += amount;
+            Happiness = Mathf.Max(0f, Happiness + amount);
+            ResourcesChanged?.Invoke(this);
         }
     }
 }

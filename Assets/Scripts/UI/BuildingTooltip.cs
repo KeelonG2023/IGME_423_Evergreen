@@ -22,6 +22,8 @@ namespace Evergreen.UI
         [SerializeField] Text ecoText;
         [SerializeField] Text populationText;
         [SerializeField] Text happinessText;
+        [Tooltip("Optional. Used for happiness rating names. Found from the BuildMenu if empty.")]
+        [SerializeField] ResourceIcons icons;
         [SerializeField] Text lifespanText;
         [Tooltip("Bar that shrinks as the building ages.")]
         [SerializeField] RectTransform lifespanFill;
@@ -103,7 +105,14 @@ namespace Evergreen.UI
             SetSignedText(moneyText, yearly.money, "$", "");
             SetSignedText(ecoText, yearly.eco, "", " eco");
             SetSignedText(populationText, yearly.population, "", " pop");
-            SetSignedText(happinessText, yearly.happiness, "", "%");
+            if (happinessText != null)
+            {
+                // Legacy Text can't show the emoji sprite, so show the rating's name.
+                HappinessRating rating = building.HappinessRating;
+                happinessText.text = FindIcons() is ResourceIcons ri && ri.happinessRatings != null
+                    ? ri.happinessRatings.LabelFor(rating) : rating.ToString();
+                happinessText.color = ArcadePalette.Pink;
+            }
 
             RefreshLifespan(building);
         }
@@ -136,6 +145,16 @@ namespace Evergreen.UI
                 float fractionLeft = yearsRemaining / Mathf.Max(1, building.LifespanYears);
                 lifespanFill.anchorMax = new Vector2(Mathf.Clamp01(fractionLeft), 1f);
             }
+        }
+
+        ResourceIcons FindIcons()
+        {
+            if (icons == null)
+            {
+                BuildMenu menu = FindFirstObjectByType<BuildMenu>(FindObjectsInactive.Include);
+                if (menu != null) icons = menu.Icons;
+            }
+            return icons;
         }
 
         static void SetSignedText(Text textField, float value, string prefix, string suffix)

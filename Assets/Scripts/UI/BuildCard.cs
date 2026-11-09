@@ -100,10 +100,10 @@ namespace Evergreen.UI
             {
                 chipTemplate.gameObject.SetActive(false);
                 int chipsShown = 0;
+                TryAddRatingChip(icons, building.happinessRating, ref chipsShown);
                 TryAddChip(icons.money, yearly.money, "", ref chipsShown);
                 TryAddChip(icons.eco, yearly.eco, "", ref chipsShown);
                 TryAddChip(icons.population, yearly.population, "", ref chipsShown);
-                TryAddChip(icons.happiness, yearly.happiness, "%", ref chipsShown);
             }
 
             // Expanded view: one labeled tile per resource.
@@ -112,7 +112,7 @@ namespace Evergreen.UI
                 if (moneyTile != null) moneyTile.Set(icons.money, yearly.money, "$", "", "money");
                 if (ecoTile != null) ecoTile.Set(icons.eco, yearly.eco, "", "", "eco");
                 if (populationTile != null) populationTile.Set(icons.population, yearly.population, "", "", "people");
-                if (happinessTile != null) happinessTile.Set(icons.happiness, yearly.happiness, "", "%", "happiness");
+                if (happinessTile != null) SetRatingTile(icons, building.happinessRating);
             }
 
             if (descriptionText != null)
@@ -133,6 +133,28 @@ namespace Evergreen.UI
             if (placeButtonLabel != null) placeButtonLabel.text = "Place " + building.displayName;
             SetOpen(false);
             SetPicked(false);
+        }
+
+        /// <summary>Emoji-only chip for the building's happiness rating.</summary>
+        void TryAddRatingChip(ResourceIcons icons, HappinessRating rating, ref int chipsShown, int maxChips = MaxChips)
+        {
+            if (chipsShown >= maxChips) return;
+            Sprite emoji = icons.happinessRatings != null ? icons.happinessRatings.EmojiFor(rating) : null;
+            if (emoji == null) emoji = icons.happiness;
+
+            YieldChip chip = Instantiate(chipTemplate, chipRow);
+            chip.gameObject.SetActive(true);
+            chip.SetIconOnly(emoji);
+            chipsShown++;
+        }
+
+        /// <summary>Expanded tile: rating emoji + its name ("Love") instead of a number.</summary>
+        void SetRatingTile(ResourceIcons icons, HappinessRating rating)
+        {
+            HappinessRatings table = icons.happinessRatings;
+            Sprite emoji = table != null ? table.EmojiFor(rating) : null;
+            string label = table != null ? table.LabelFor(rating) : rating.ToString();
+            happinessTile.SetText(emoji != null ? emoji : icons.happiness, label, ArcadePalette.Pink, "happiness");
         }
 
         /// <summary>Adds a chip for a non-zero yield, unless the row is already full.</summary>
@@ -163,7 +185,6 @@ namespace Evergreen.UI
                 AddColoredTotal(totalParts, yearly.money * yearsToTotal, "$", "");
                 AddColoredTotal(totalParts, yearly.eco * yearsToTotal, "", " eco");
                 AddColoredTotal(totalParts, yearly.population * yearsToTotal, "", " people");
-                AddColoredTotal(totalParts, yearly.happiness * yearsToTotal, "", "% happy");
                 lifetimeTotalsText.text = string.Join("    ", totalParts);
             }
 
@@ -224,7 +245,7 @@ namespace Evergreen.UI
                 TryAddChip(icons.money, change.money, "", ref chipsShown);
                 TryAddChip(icons.eco, change.eco, "", ref chipsShown);
                 TryAddChip(icons.population, change.population, "", ref chipsShown);
-                TryAddChip(icons.happiness, change.happiness, "%", ref chipsShown);
+                TryAddChip(icons.happiness, upgrade.happinessRatingChange, "", ref chipsShown);
             }
 
             if (icons != null)
@@ -232,7 +253,7 @@ namespace Evergreen.UI
                 if (moneyTile != null) moneyTile.Set(icons.money, change.money, "$", "", "money");
                 if (ecoTile != null) ecoTile.Set(icons.eco, change.eco, "", "", "eco");
                 if (populationTile != null) populationTile.Set(icons.population, change.population, "", "", "people");
-                if (happinessTile != null) happinessTile.Set(icons.happiness, change.happiness, "", "%", "happiness");
+                if (happinessTile != null) happinessTile.Set(icons.happiness, upgrade.happinessRatingChange, "", "", "happiness rating");
             }
 
             if (descriptionText != null)
@@ -387,10 +408,10 @@ namespace Evergreen.UI
                 ResourceYield yearly = building.YearlyYield;
                 int chipsShown = 0;
                 const int summaryChips = 4; // the summary has room for all four
+                TryAddRatingChip(icons, building.HappinessRating, ref chipsShown, summaryChips);
                 TryAddChip(icons.money, yearly.money, "", ref chipsShown, summaryChips);
                 TryAddChip(icons.eco, yearly.eco, "", ref chipsShown, summaryChips);
                 TryAddChip(icons.population, yearly.population, "", ref chipsShown, summaryChips);
-                TryAddChip(icons.happiness, yearly.happiness, "%", ref chipsShown, summaryChips);
             }
 
             SetOpen(false);

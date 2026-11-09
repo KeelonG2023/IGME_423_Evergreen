@@ -66,7 +66,7 @@ MonoBehaviour:
   startingMoney: 1000
   startingEco: 50
   startingPopulation: 100
-  startingHappiness: 60
+  startingHappiness: 0
 --- !u!114 &6843335688127349131
 MonoBehaviour:
   m_ObjectHideFlags: 0

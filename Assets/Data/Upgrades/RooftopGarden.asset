@@ -20,5 +20,6 @@ MonoBehaviour:
     money: -5
     eco: 2
     population: 0
-    happiness: 1
+    happiness: 0
+  happinessRatingChange: 1
   requiresResearch: 1

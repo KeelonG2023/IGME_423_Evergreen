@@ -41,6 +41,7 @@ namespace Evergreen.UI
         [SerializeField] float moneyFullAt = 10000f;
         [SerializeField] float ecoFullAt = 100f;
         [SerializeField] float populationFullAt = 3000f;
+        [SerializeField] float happinessFullAt = 100f;
 
         // ---------- Unity lifecycle ----------
 
@@ -120,7 +121,7 @@ namespace Evergreen.UI
 
             // Happiness can't cause a game over, so it's never marked failed.
             if (happinessRow != null)
-                happinessRow.Set($"{Mathf.RoundToInt(resources.Happiness)}%", resources.Happiness / 100f, false);
+                happinessRow.Set($"{Mathf.FloorToInt(resources.Happiness):N0}", resources.Happiness / happinessFullAt, false);
         }
 
         // ---------- Buttons ----------
