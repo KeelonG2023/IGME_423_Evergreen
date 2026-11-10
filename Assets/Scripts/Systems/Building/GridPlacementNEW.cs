@@ -377,7 +377,7 @@ public class GridPlacementNEW : MonoBehaviour
         foreach (Vector2Int freed in grid.ClearObject(building.gameObject))
         {
             // Neighbouring tiled pieces (roads) re-pick their shape now that this one is gone.
-            foreach (Vector2Int axis in axesToCheck)
+            foreach (Vector2Int axis in PlaceableGrid.axesToCheck)
                 UpdateBuildingTile(freed + axis);
         }
     }
