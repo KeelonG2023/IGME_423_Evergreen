@@ -371,6 +371,15 @@ public class GridPlacementNEW : MonoBehaviour
         int turns = Mathf.RoundToInt(building.transform.eulerAngles.y / 90f);
         foreach (Vector3Int cell in BlockCells(WorldToCell(building.transform.position), Rotated(size, turns)))
             occupiedCells.Remove(cell);
+
+        if (grid == null) return;
+        // PlaceableGrid is what CanBuild checks, so it has to be cleared too.
+        foreach (Vector2Int freed in grid.ClearObject(building.gameObject))
+        {
+            // Neighbouring tiled pieces (roads) re-pick their shape now that this one is gone.
+            foreach (Vector2Int axis in axesToCheck)
+                UpdateBuildingTile(freed + axis);
+        }
     }
 
     // ---------- Helpers ----------

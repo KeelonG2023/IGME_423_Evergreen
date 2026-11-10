@@ -140,6 +140,23 @@ public class PlaceableGrid : MonoBehaviour
         return true;
     }
 
+    /// <summary>Empties every cell that holds this object (used when a building is demolished). Returns the freed cells.</summary>
+    public List<Vector2Int> ClearObject(GameObject obj)
+    {
+        var freed = new List<Vector2Int>();
+        if (grid == null || obj == null) return freed;
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                if (grid[x, y].gameobject != obj) continue;
+                grid[x, y].SetBuilding(null, null);
+                freed.Add(new Vector2Int(x, y));
+            }
+        }
+        return freed;
+    }
+
     private (int x, int y) WorldToGridPosition(Vector3 worldPos)
     {
         int x = Mathf.FloorToInt((worldPos - transform.position).x / GridPlacementNEW.cellSize);
