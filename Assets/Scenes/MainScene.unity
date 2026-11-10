@@ -252,6 +252,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Asset: {fileID: 1424409967}
   m_ActionId: 7607c7b6-cd76-4816-beef-bd0341cfe950
+--- !u!223 &484315839 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 6929225878588506447, guid: a7eeaa91b8aa5594aa2de08dff6a86cd, type: 3}
+  m_PrefabInstance: {fileID: 2084219699}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -859,6 +864,67 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Asset: {fileID: 1424409967}
   m_ActionId: c95b2375-e6d9-4b88-9c4c-c5e76515df4b
+--- !u!1001 &1133068717
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 66348924328793942, guid: 33982de9785d59348ac0f5983e27df6b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 66348924328793942, guid: 33982de9785d59348ac0f5983e27df6b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 66348924328793942, guid: 33982de9785d59348ac0f5983e27df6b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 66348924328793942, guid: 33982de9785d59348ac0f5983e27df6b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 66348924328793942, guid: 33982de9785d59348ac0f5983e27df6b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 66348924328793942, guid: 33982de9785d59348ac0f5983e27df6b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 66348924328793942, guid: 33982de9785d59348ac0f5983e27df6b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 66348924328793942, guid: 33982de9785d59348ac0f5983e27df6b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 66348924328793942, guid: 33982de9785d59348ac0f5983e27df6b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 66348924328793942, guid: 33982de9785d59348ac0f5983e27df6b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1543199061352311849, guid: 33982de9785d59348ac0f5983e27df6b, type: 3}
+      propertyPath: hudCanvas
+      value: 
+      objectReference: {fileID: 484315839}
+    - target: {fileID: 5022123339168559475, guid: 33982de9785d59348ac0f5983e27df6b, type: 3}
+      propertyPath: m_Name
+      value: HappinessPopUps
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 33982de9785d59348ac0f5983e27df6b, type: 3}
 --- !u!1 &1253307973
 GameObject:
   m_ObjectHideFlags: 0
@@ -2107,6 +2173,10 @@ PrefabInstance:
     - target: {fileID: 845909097635704165, guid: a7eeaa91b8aa5594aa2de08dff6a86cd, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -109
+      objectReference: {fileID: 0}
+    - target: {fileID: 928347085838752611, guid: a7eeaa91b8aa5594aa2de08dff6a86cd, type: 3}
+      propertyPath: m_Text
+      value: 3x
       objectReference: {fileID: 0}
     - target: {fileID: 936673307550356870, guid: a7eeaa91b8aa5594aa2de08dff6a86cd, type: 3}
       propertyPath: m_AnchorMax.x
@@ -4348,6 +4418,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -45
       objectReference: {fileID: 0}
+    - target: {fileID: 6097189903062168551, guid: a7eeaa91b8aa5594aa2de08dff6a86cd, type: 3}
+      propertyPath: m_Text
+      value: 5x
+      objectReference: {fileID: 0}
     - target: {fileID: 6144128771532389922, guid: a7eeaa91b8aa5594aa2de08dff6a86cd, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -5645,3 +5719,4 @@ SceneRoots:
   - {fileID: 816871011}
   - {fileID: 1253307974}
   - {fileID: 1506431022948079360}
+  - {fileID: 1133068717}
