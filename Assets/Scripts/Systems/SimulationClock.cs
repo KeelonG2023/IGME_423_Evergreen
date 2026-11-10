@@ -8,8 +8,8 @@ namespace Evergreen.Systems
     {
         Paused = 0,
         Normal = 1,
-        Fast = 2,
-        Fastest = 3
+        Fast = 3,
+        Fastest = 5
     }
 
     /// <summary>

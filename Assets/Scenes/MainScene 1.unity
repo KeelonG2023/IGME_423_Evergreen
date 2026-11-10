@@ -4228,57 +4228,63 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 51e0a2f9a31b18c4ba5300628164cdd5, type: 3}
---- !u!1 &2849001
-GameObject:
+--- !u!1001 &2297338967469046455
+PrefabInstance:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2849002}
-  - component: {fileID: 2849003}
-  m_Layer: 0
-  m_Name: HappinessPopUps
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2849002
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2849001}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2849003
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2849001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c1e5a9d3f4b4e2a9b6d8e0f1a2c3b4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ratings: {fileID: 11400000, guid: 9e4c2a7b1d3f4e5a8c6b0d2e4f6a8c1b, type: 2}
-  icon: {fileID: 6266176060360064, guid: 8b2746409d0599f40b14dae8520d26d2, type: 3}
-  size: {x: 48, y: 48}
-  heightAboveBuilding: 0.5
-  bobPixels: 6
-  maxActive: 3
-  lifetimeSeconds: 30
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 66348924328793942, guid: 33982de9785d59348ac0f5983e27df6b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 66348924328793942, guid: 33982de9785d59348ac0f5983e27df6b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 66348924328793942, guid: 33982de9785d59348ac0f5983e27df6b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 66348924328793942, guid: 33982de9785d59348ac0f5983e27df6b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 66348924328793942, guid: 33982de9785d59348ac0f5983e27df6b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 66348924328793942, guid: 33982de9785d59348ac0f5983e27df6b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 66348924328793942, guid: 33982de9785d59348ac0f5983e27df6b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 66348924328793942, guid: 33982de9785d59348ac0f5983e27df6b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 66348924328793942, guid: 33982de9785d59348ac0f5983e27df6b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 66348924328793942, guid: 33982de9785d59348ac0f5983e27df6b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5022123339168559475, guid: 33982de9785d59348ac0f5983e27df6b, type: 3}
+      propertyPath: m_Name
+      value: HappinessPopUps
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 33982de9785d59348ac0f5983e27df6b, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -4293,4 +4299,4 @@ SceneRoots:
   - {fileID: 816871011}
   - {fileID: 1253307974}
   - {fileID: 1506431022948079360}
-  - {fileID: 2849002}
+  - {fileID: 2297338967469046455}
