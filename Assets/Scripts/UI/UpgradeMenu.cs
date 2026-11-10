@@ -40,6 +40,14 @@ namespace Evergreen.UI
         [Header("Text")]
         [SerializeField] string backLabel = "< Back to Build";
         [SerializeField] string titleWhileUpgrading = "Upgrades";
+        [SerializeField] string destroyLabel = "Destroy Building";
+        [SerializeField] string confirmLabel = "Click again to destroy";
+
+        [Header("Destroy")]
+        [Tooltip("Share of the build cost refunded on demolish (0 = nothing back, 0.5 = half).")]
+        [SerializeField, Range(0f, 1f)] float demolishRefund = 0.25f;
+        [Tooltip("Seconds the confirm prompt stays up before the button resets.")]
+        [SerializeField] float confirmWindow = 3f;
 
         /// <summary>The building whose upgrades are showing, or null when the build menu is showing.</summary>
         public BuildingYield Target { get; private set; }
@@ -49,6 +57,9 @@ namespace Evergreen.UI
         readonly List<GameObject> hiddenTabs = new List<GameObject>();
         BuildingSummaryHeader summaryHeader;
         Button backButton;
+        Button destroyButton;
+        Text destroyText;
+        float confirmTimeLeft;
         GameObject backRow;
         string buildTitle;
         float secondsUntilRefresh;
@@ -92,6 +103,12 @@ namespace Evergreen.UI
                 return;
             }
 
+            if (confirmTimeLeft > 0f)
+            {
+                confirmTimeLeft -= Time.unscaledDeltaTime;
+                if (confirmTimeLeft <= 0f) ResetDestroyButton();
+            }
+
             // Unscaled so it still updates while the game is paused.
             secondsUntilRefresh -= Time.unscaledDeltaTime;
             if (secondsUntilRefresh <= 0f)
@@ -119,6 +136,7 @@ namespace Evergreen.UI
 
             SpawnCards();
             RefreshCards();
+            ResetDestroyButton();
             if (panelToggle != null && panelToggle.IsCollapsed) panelToggle.SetCollapsed(false);
             if (scrollRect != null) scrollRect.verticalNormalizedPosition = 1f;
         }
@@ -187,6 +205,7 @@ namespace Evergreen.UI
             backRow.transform.SetParent(transform, false);
             var rowLayout = backRow.GetComponent<VerticalLayoutGroup>();
             rowLayout.padding = new RectOffset(0, 0, 20, 0);
+            rowLayout.spacing = 12f;
             rowLayout.childControlWidth = true;
             rowLayout.childControlHeight = true;
             rowLayout.childForceExpandWidth = true;
@@ -198,6 +217,9 @@ namespace Evergreen.UI
 
             backButton = Instantiate(backButtonTemplate, backRow.transform);
             backButton.name = "Back To Build";
+            // The template tab is hidden by the time we clone it, so the clone starts inactive. Turn it on.
+            backButton.gameObject.SetActive(true);
+            backButton.interactable = true;
             backButton.onClick.RemoveAllListeners();
             backButton.onClick.AddListener(OnBackClicked);
 
@@ -217,7 +239,51 @@ namespace Evergreen.UI
             layout.flexibleWidth = 1f;
             layout.minHeight = layout.preferredHeight = 84f;
 
+            CreateDestroyButton();
             backRow.SetActive(false);
+        }
+
+        /// <summary>Second clone of the tab, under Back, styled as a danger button.</summary>
+        void CreateDestroyButton()
+        {
+            destroyButton = Instantiate(backButton, backRow.transform);
+            destroyButton.name = "Destroy Building";
+            destroyButton.gameObject.SetActive(true);
+            destroyButton.interactable = true;
+            destroyButton.onClick.RemoveAllListeners();
+            destroyButton.onClick.AddListener(OnDestroyClicked);
+            destroyText = destroyButton.GetComponentInChildren<Text>();
+            ResetDestroyButton();
+        }
+
+        void OnDestroyClicked()
+        {
+            ClearUiFocus();
+            if (Target == null) return;
+
+            // First click arms it, second click within the window demolishes.
+            if (confirmTimeLeft <= 0f)
+            {
+                confirmTimeLeft = confirmWindow;
+                if (destroyText != null) destroyText.text = confirmLabel;
+                return;
+            }
+
+            BuildingYield building = Target;
+            ResetDestroyButton();
+            if (selector != null) selector.Deselect(); // closes this panel
+            else CloseUpgrades();
+            BuildingDemolition.Demolish(building, resources, demolishRefund);
+        }
+
+        void ResetDestroyButton()
+        {
+            confirmTimeLeft = 0f;
+            if (destroyText == null) return;
+
+            float refund = BuildingDemolition.RefundFor(Target, demolishRefund);
+            destroyText.text = refund > 0f ? $"{destroyLabel}  (+${refund:N0})" : destroyLabel;
+            destroyText.color = ArcadePalette.Coral;
         }
 
         void OnBackClicked()

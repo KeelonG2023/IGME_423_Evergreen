@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Icon_GreenApartments_0: -4895238046279182129
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
