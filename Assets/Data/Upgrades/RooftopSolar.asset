@@ -15,10 +15,11 @@ MonoBehaviour:
   displayName: Rooftop Solar
   icon: {fileID: 0}
   description: 'Panels on the roof cover part of the building''s own power use.'
-  cost: 450
+  cost: 400
   yearlyChange:
     money: 35
     eco: 2
     population: 0
     happiness: 0
   happinessRatingChange: 0
+  requiresResearch: 0

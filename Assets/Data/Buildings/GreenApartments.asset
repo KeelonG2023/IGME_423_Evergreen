@@ -20,7 +20,7 @@ MonoBehaviour:
     but lower bills and happier tenants.
   cost: 1300
   yearlyYield:
-    money: 70
+    money: 80
     eco: 1
     population: 40
     happiness: 0
@@ -32,3 +32,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 000c54edb94a4d3ba2ac37176739bdb8, type: 2}
   - {fileID: 11400000, guid: c9acd7e33e8e4731863f2e3cba19f12f, type: 2}
   - {fileID: 11400000, guid: 3200b3a2657d4c1f9d4328e71eb3d057, type: 2}
+  - {fileID: 11400000, guid: ab2156c79bd64194ad87b40c79d3f57e, type: 2}

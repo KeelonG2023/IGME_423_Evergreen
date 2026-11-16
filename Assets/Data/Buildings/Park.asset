@@ -20,8 +20,8 @@ MonoBehaviour:
     little upkeep each year.
   cost: 300
   yearlyYield:
-    money: -40
-    eco: 8
+    money: -30
+    eco: 7
     population: 0
     happiness: 0
   happinessRating: 5
@@ -30,3 +30,4 @@ MonoBehaviour:
   prefab: {fileID: 7050785605151487696, guid: ac6fb7678b723684db6b5ff283bc59d2, type: 3}
   upgrades:
   - {fileID: 11400000, guid: a333b27ee34f42628d170549d85ea751, type: 2}
+  - {fileID: 11400000, guid: c6454691f45d4b6fb02c7e2469e0c28c, type: 2}

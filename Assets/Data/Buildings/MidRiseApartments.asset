@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf17422321d3e694e8529b469afb59b5, type: 3}
+  m_Name: MidRiseApartments
+  m_EditorClassIdentifier: 
+  displayName: Mid-Rise Apartments
+  category: 1
+  icon: {fileID: 8934166159419189772, guid: 8e8ce1fb5a6411948b4f2c80900a400b, type: 3}
+  tileColor: {r: 0.8, g: 0.6, b: 0.5, a: 1}
+  description: 'A bigger block of flats. Lots of residents and rent, but the old design wastes energy.'
+  cost: 1000
+  yearlyYield:
+    money: 75
+    eco: -4
+    population: 55
+    happiness: 0
+  happinessRating: 2
+  lifespanYears: 45
+  footprint: {x: 1, y: 1}
+  prefab: {fileID: 5016919987685771055, guid: d9d4e33ac232c834686c64355915a351, type: 3}
+  upgrades:
+  - {fileID: 11400000, guid: 000c54edb94a4d3ba2ac37176739bdb8, type: 2}
+  - {fileID: 11400000, guid: e7cedaf5e280496ea4741247462ac552, type: 2}
+  - {fileID: 11400000, guid: c9acd7e33e8e4731863f2e3cba19f12f, type: 2}
+  - {fileID: 11400000, guid: 3200b3a2657d4c1f9d4328e71eb3d057, type: 2}
