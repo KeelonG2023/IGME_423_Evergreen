@@ -22,3 +22,4 @@ MonoBehaviour:
     population: 0
     happiness: 0
   happinessRatingChange: 1
+  requiresResearch: 0

@@ -18,7 +18,7 @@ MonoBehaviour:
   cost: 500
   yearlyChange:
     money: 40
-    eco: 0
+    eco: 1
     population: 0
     happiness: 0
   happinessRatingChange: 0

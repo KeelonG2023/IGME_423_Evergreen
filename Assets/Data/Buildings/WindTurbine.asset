@@ -20,12 +20,12 @@ MonoBehaviour:
     to run once it's up.
   cost: 900
   yearlyYield:
-    money: 60
+    money: 130
     eco: 4
     population: 0
     happiness: 0
   happinessRating: 2
-  lifespanYears: 20
+  lifespanYears: 25
   footprint: {x: 1, y: 1}
   prefab: {fileID: 344837838682799077, guid: d75a1867d23569a41a5508f002b9e2af, type: 3}
   upgrades:

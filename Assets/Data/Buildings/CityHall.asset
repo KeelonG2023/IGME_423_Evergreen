@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf17422321d3e694e8529b469afb59b5, type: 3}
+  m_Name: CityHall
+  m_EditorClassIdentifier: 
+  displayName: City Hall
+  category: 3
+  icon: {fileID: 8934166159419189772, guid: 8e8ce1fb5a6411948b4f2c80900a400b, type: 3}
+  tileColor: {r: 0.85, g: 0.8, b: 0.6, a: 1}
+  description: 'Runs the city and collects taxes more efficiently. A landmark people are proud of.'
+  cost: 2500
+  yearlyYield:
+    money: 120
+    eco: 0
+    population: 0
+    happiness: 0
+  happinessRating: 4
+  lifespanYears: 80
+  footprint: {x: 2, y: 1}
+  prefab: {fileID: 890306087284230466, guid: 6207a3eedbdf6454bbce6e4bcf3bc444, type: 3}
+  upgrades:
+  - {fileID: 11400000, guid: 000c54edb94a4d3ba2ac37176739bdb8, type: 2}
+  - {fileID: 11400000, guid: c9acd7e33e8e4731863f2e3cba19f12f, type: 2}
+  - {fileID: 11400000, guid: cecb67eb5c304db59db8eaaa88a7a1ec, type: 2}
+  - {fileID: 11400000, guid: 4aa219a2c96141aa998b1f61cd1610e6, type: 2}

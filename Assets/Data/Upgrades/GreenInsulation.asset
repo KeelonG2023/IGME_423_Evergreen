@@ -15,10 +15,10 @@ MonoBehaviour:
   displayName: Green Insulation
   icon: {fileID: 0}
   description: 'Thick, low-carbon insulation keeps the heat in, so the building burns less energy and saves on bills.'
-  cost: 300
+  cost: 250
   yearlyChange:
-    money: 15
-    eco: 3
+    money: 20
+    eco: 2
     population: 0
     happiness: 0
   happinessRatingChange: 0

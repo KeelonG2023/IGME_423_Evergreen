@@ -27,6 +27,8 @@ MonoBehaviour:
   lifespanYears: 30
   footprint: {x: 1, y: 1}
   prefab: {fileID: 2370426023769963757, guid: 634415a65def7da46a4b992b4209da6a, type: 3}
+  upgrades:
+  - {fileID: 11400000, guid: 8b7325954dc04450b50a6e0687a3dcc5, type: 2}
   type: Road
   tiles:
   - {fileID: 11400000, guid: d50c30471a6afb74c8a8b263aefbbc8a, type: 2}

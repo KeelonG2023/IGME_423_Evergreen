@@ -20,8 +20,8 @@ MonoBehaviour:
     hate living near it.
   cost: 500
   yearlyYield:
-    money: 300
-    eco: -20
+    money: 250
+    eco: -15
     population: 0
     happiness: 0
   happinessRating: 1
