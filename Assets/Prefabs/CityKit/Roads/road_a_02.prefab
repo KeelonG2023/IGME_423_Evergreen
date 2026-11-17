@@ -28,7 +28,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3.5, y: 1.5, z: 4.4}
+  m_LocalScale: {x: 3.84, y: 1.5, z: 4.4}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7735260759500655476}
@@ -75,7 +75,10 @@ MonoBehaviour:
     population: 0
     happiness: 0
   lifespanYears: 0
+  producing: 1
+  happinessRating: 3
   spriteToGreyOutOnExpire: {fileID: 0}
+  installedUpgrades: []
 --- !u!1 &9005141478570900405
 GameObject:
   m_ObjectHideFlags: 0

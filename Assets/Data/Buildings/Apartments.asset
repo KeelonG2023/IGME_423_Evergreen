@@ -16,7 +16,8 @@ MonoBehaviour:
   category: 1
   icon: {fileID: 8934166159419189772, guid: 8e8ce1fb5a6411948b4f2c80900a400b, type: 3}
   tileColor: {r: 0.9490196, g: 0.56078434, b: 0.36078432, a: 1}
-  description: Dense housing that fits lots of people on a small lot.
+  description: Dense housing that fits lots of people on a small lot. Living spaces
+    need adjacency to roads to function.
   cost: 800
   yearlyYield:
     money: 60

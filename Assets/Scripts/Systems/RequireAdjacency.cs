@@ -10,8 +10,11 @@ public class RequireAdjacency : MonoBehaviour
     public string requiredObject;
 
     BuildingYield building;
+
+    AlertInfo alert;
     private void Start()
     {
+        alert = new AlertInfo("Adjacency requirements not met!", $"This building needs to be next to at least one {requiredObject} in order to produce resources.");
         building = GetComponent<BuildingYield>();
 
         if (building == null || requiredObject == string.Empty )
@@ -37,9 +40,11 @@ public class RequireAdjacency : MonoBehaviour
             if(cell.gameobject.name == requiredObject)
             {
                 building.producing = true;
+                if(building.statusAlerts.Contains(alert)) building.statusAlerts.Remove(alert);
                 return;
             }
         }
         building.producing = false;
+        building.statusAlerts.Add(alert);
    }
 }

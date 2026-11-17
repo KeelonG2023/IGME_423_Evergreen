@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Road
   m_EditorClassIdentifier: 
   displayName: Road
-  category: 0
-  icon: {fileID: 0}
+  category: 1
+  icon: {fileID: 8934166159419189772, guid: 8e8ce1fb5a6411948b4f2c80900a400b, type: 3}
   tileColor: {r: 1, g: 1, b: 1, a: 1}
   description: Place roads. Living spaces need adjacency to roads to function.
   cost: 10
@@ -23,12 +23,11 @@ MonoBehaviour:
     eco: 0
     population: 0
     happiness: 0
-  happinessRating: 2
+  happinessRating: 3
   lifespanYears: 30
   footprint: {x: 1, y: 1}
   prefab: {fileID: 2370426023769963757, guid: 634415a65def7da46a4b992b4209da6a, type: 3}
-  upgrades:
-  - {fileID: 11400000, guid: 8b7325954dc04450b50a6e0687a3dcc5, type: 2}
+  upgrades: []
   type: Road
   tiles:
   - {fileID: 11400000, guid: d50c30471a6afb74c8a8b263aefbbc8a, type: 2}

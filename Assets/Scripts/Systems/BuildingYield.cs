@@ -49,7 +49,8 @@ namespace Evergreen.Systems
         [Tooltip("Upgrades bought for this building. Filled at runtime by the upgrade panel.")]
         [SerializeField] List<BuildingUpgrade> installedUpgrades = new List<BuildingUpgrade>();
 
-        
+        public List<AlertInfo> statusAlerts = new List<AlertInfo>();
+
         /// <summary>Fires on this building whenever an upgrade is installed.</summary>
         public event Action<BuildingYield> UpgradesChanged;
 
@@ -112,6 +113,9 @@ namespace Evergreen.Systems
                 yearlyYield = value;
             }
         }
+
+        /// <summary>The total amount of resources this building has produced in its lifetime.</summary>
+        public ResourceYield TotalYield;
 
         /// <summary>Remaining lifespan in years (fractional). Infinity if it never expires.</summary>
         public float YearsRemaining

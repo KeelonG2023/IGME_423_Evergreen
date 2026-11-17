@@ -162,6 +162,7 @@ namespace Evergreen.UI
             };
             var button = go.GetComponent<Button>();
             button.targetGraphic = image;
+            button.onClick.AddListener(() => AddToYieldTotal(building, level.pointsPerClick));
             button.onClick.AddListener(() => Collect(popUp));
 
             active.Add(popUp);
@@ -174,6 +175,10 @@ namespace Evergreen.UI
             resources.GainHappiness(popUp.points);
             int index = active.IndexOf(popUp);
             if (index >= 0) Remove(index);
+        }
+        void AddToYieldTotal (BuildingYield total, float amount)
+        {
+            total.TotalYield.happiness += amount;
         }
 
         void Remove(int index)

@@ -145,6 +145,7 @@ namespace Evergreen.Systems
             deltaThisTick.happiness = 0f; // No passive happiness: it's only earned by clicking pop-ups.
             LastTickDelta = deltaThisTick;
             Apply(deltaThisTick);
+            UpdateTotalYields(tickingClock);
         }
 
         void Apply(ResourceYield delta)
@@ -155,6 +156,30 @@ namespace Evergreen.Systems
             Happiness = Mathf.Max(0f, Happiness + delta.happiness);
             ResourcesChanged?.Invoke(this);
             CheckForGameOver();
+        }
+
+        /// <summary>
+        /// Adds the amount that was counted this tick to the BuildingYield's total yield.
+        /// </summary>
+        void UpdateTotalYields(SimulationClock tickingClock)
+        {
+            for (int index = registeredSources.Count - 1; index >= 0; index--)
+            {
+                BuildingYield source = (BuildingYield)registeredSources[index];
+
+                // A destroyed Unity object isn't C# null, so it needs the "== null" check on UnityEngine.Object.
+                bool sourceWasDestroyed = source == null || (source is UnityEngine.Object unityObject && unityObject == null);
+                if (sourceWasDestroyed)
+                {
+                    registeredSources.RemoveAt(index);
+                    continue;
+                }
+
+                source.TotalYield.money += source.YearlyYield.money * (1f / tickingClock.TicksPerYear);
+                source.TotalYield.eco += source.YearlyYield.eco * (1f / tickingClock.TicksPerYear);
+                source.TotalYield.happiness += source.YearlyYield.happiness * (1f / tickingClock.TicksPerYear);
+                source.TotalYield.population += source.YearlyYield.population * (1f / tickingClock.TicksPerYear);
+            }
         }
 
         // ---------- API for other systems ----------
