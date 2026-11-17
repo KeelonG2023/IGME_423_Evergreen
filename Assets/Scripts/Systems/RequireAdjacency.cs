@@ -45,6 +45,6 @@ public class RequireAdjacency : MonoBehaviour
             }
         }
         building.producing = false;
-        building.statusAlerts.Add(alert);
+        if (!building.statusAlerts.Contains(alert))  building.statusAlerts.Add(alert);
    }
 }

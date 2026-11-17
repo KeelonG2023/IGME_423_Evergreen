@@ -58,7 +58,7 @@ public class StatusMenu : MonoBehaviour
     {
         if (selected != null)
         {
-            OpenStatusMenu(selected);
+            UpdateStatusMenu(selected);
         }
     }
     void OpenStatusMenu(BuildingYield building)
@@ -66,22 +66,9 @@ public class StatusMenu : MonoBehaviour
         selected = building;
         if (statusMenu != null)
         {
-            statusMenu.SetActive(true);
-            titleText.text = building.DisplayName;
+            UpdateStatusMenu(building);
 
-            UpdateText(incomeRateText, $"{(building.YearlyYield.money < 0? "-" : "+")}{Math.Abs(building.YearlyYield.money)}");
-            UpdateText(ecoRateText, $"{(building.YearlyYield.eco < 0 ? "-" : "+")}{Math.Abs(building.YearlyYield.eco)}");
-            UpdateText(happinessRateText, $"{(building.YearlyYield.happiness < 0 ? "-" : "+")}{Math.Abs(building.YearlyYield.happiness)}");
-            UpdateText(popRateText, $"{(building.YearlyYield.population < 0 ? "-" : "+")}{Math.Abs(building.YearlyYield.population)}");
-
-            UpdateText(incomeTotalText, $"{Math.Round(building.TotalYield.money, 1)}");
-            UpdateText(ecoTotalText, $"{Math.Round(building.TotalYield.eco, 1)}");
-            UpdateText(popTotalText, $"{Math.Round(building.TotalYield.population, 1)}");
-            UpdateText(happinessTotalText, $"{Math.Round(building.TotalYield.happiness, 1)}");
-
-            UpdateText(ageText, $"{Math.Round(building.LifespanYears - building.YearsRemaining, 1)}");
-
-            foreach(AlertInfo alert in building.statusAlerts)
+            foreach (AlertInfo alert in building.statusAlerts)
             {
                 GameObject newObject = Instantiate(alertObjectReference, alertObjectReference.transform.parent);
 
@@ -89,8 +76,29 @@ public class StatusMenu : MonoBehaviour
 
                 statusAlert.text.text = alert.text;
                 statusAlert.title.text = alert.title;
-            } 
+                newObject.SetActive(true);
+            }
         }
+
+
+    }
+
+    void UpdateStatusMenu(BuildingYield building)
+    {
+        statusMenu.SetActive(true);
+        titleText.text = building.DisplayName;
+
+        UpdateText(incomeRateText, $"{(building.YearlyYield.money < 0 ? "-" : "+")}{Math.Abs(building.YearlyYield.money)}");
+        UpdateText(ecoRateText, $"{(building.YearlyYield.eco < 0 ? "-" : "+")}{Math.Abs(building.YearlyYield.eco)}");
+        UpdateText(happinessRateText, $"{(building.YearlyYield.happiness < 0 ? "-" : "+")}{Math.Abs(building.YearlyYield.happiness)}");
+        UpdateText(popRateText, $"{(building.YearlyYield.population < 0 ? "-" : "+")}{Math.Abs(building.YearlyYield.population)}");
+
+        UpdateText(incomeTotalText, $"{Math.Round(building.TotalYield.money, 1)}");
+        UpdateText(ecoTotalText, $"{Math.Round(building.TotalYield.eco, 1)}");
+        UpdateText(popTotalText, $"{Math.Round(building.TotalYield.population, 1)}");
+        UpdateText(happinessTotalText, $"{Math.Round(building.TotalYield.happiness, 1)}");
+
+        UpdateText(ageText, $"{Math.Round(building.LifespanYears - building.YearsRemaining, 1)}");
     }
 
     void CloseStatusMenu()
@@ -102,18 +110,11 @@ public class StatusMenu : MonoBehaviour
 
             Transform parent = alertObjectReference.transform.parent;
 
-            int index = 0;
-
-            while (index < parent.childCount)
+            foreach (Transform child in parent)
             {
-                GameObject obj = parent.GetChild(index).gameObject;
-                if (obj == alertObjectReference)
+                if (child.gameObject != null && child.gameObject != alertObjectReference)
                 {
-                    index++;
-                }
-                else
-                {
-                    Destroy(obj);
+                    Destroy(child.gameObject);
                 }
             }
         }
