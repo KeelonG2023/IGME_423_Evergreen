@@ -56,7 +56,7 @@ public class GridPlacementNEW : MonoBehaviour
     bool hasGroundUnderMouse;
     Vector2 rightClickStart;
 
-    
+
 
     // ---------- Unity lifecycle ----------
 
@@ -252,31 +252,66 @@ public class GridPlacementNEW : MonoBehaviour
 
     // ---------- Placing ----------
 
-    void TryPlace()
+    /// <summary>
+    /// Manually places a building at the given grid coordinates without mouse input.
+    /// Returns the spawned GameObject, or null if validation or resource checks fail.
+    /// </summary>
+    public GameObject PlaceBuilding(
+        BuildingDefinition definition,
+        Vector2Int gridCoords,
+        int turns = 0,
+        bool chargeResources = false,
+        bool force = false)
     {
-        if (!hasGroundUnderMouse || !currentCellValid) return;
-        if (resources != null && !resources.TrySpend(selected.cost)) return;
+        if (definition == null || definition.prefab == null || grid == null)
+            return null;
 
+        turns = ((turns % 4) + 4) % 4;
+        Vector3Int anchorCell = new Vector3Int(gridCoords.x, 0, gridCoords.y);
+        Vector2Int size = Rotated(definition.footprint, turns);
+        List<Vector3Int> cells = BlockCells(anchorCell, size);
 
-        GameObject objectToPlace = selected.prefab;
-        Quaternion orientation = Quaternion.Euler(0f, quarterTurns * 90f, 0f);
-        //if this cast succeeds that means it's a tiled building which means it'll attempt to update itself and neighbors
-        if (selected is TiledBuilding tile)
+        Vector3 first = CellToWorld(cells[0]);
+        Vector3 last = CellToWorld(cells[cells.Count - 1]);
+        Vector3 center = (first + last) * 0.5f;
+        float groundY = GetGroundHeight(center);
+
+        return PlaceBuildingInCells(definition, cells, groundY, turns, chargeResources, force);
+    }
+
+    GameObject PlaceBuildingInCells(
+        BuildingDefinition definition,
+        List<Vector3Int> cells,
+        float groundY,
+        int turns,
+        bool chargeResources,
+        bool force)
+    {
+        if (!force && !grid.CanBuild(cells))
+            return null;
+
+        if (chargeResources && resources != null && !resources.TrySpend(definition.cost))
+            return null;
+
+        Vector3 first = CellToWorld(cells[0]);
+        Vector3 last = CellToWorld(cells[cells.Count - 1]);
+        Vector3 worldPos = new Vector3((first.x + last.x) * 0.5f, groundY, (first.z + last.z) * 0.5f);
+
+        GameObject objectToPlace = definition.prefab;
+        Quaternion orientation = Quaternion.Euler(0f, turns * 90f, 0f);
+        List<Vector2Int> occupiedAxes = null;
+
+        // Resolve auto-tiling variant if this is a TiledBuilding (e.g., roads)
+        if (definition is TiledBuilding tile)
         {
-            List<Vector2Int> occupiedAxes = new List<Vector2Int>();
-
-            //find the tiles of the same type that are beside this one
+            occupiedAxes = new List<Vector2Int>();
             foreach (Vector2Int axis in PlaceableGrid.axesToCheck)
             {
-                TiledBuilding cell = grid.GetAt(currentCells[0].x + axis.x, currentCells[0].z + axis.y) as TiledBuilding;
-
-               if (cell && cell.type == tile.type)
-               {
+                TiledBuilding neighbor = grid.GetAt(cells[0].x + axis.x, cells[0].z + axis.y) as TiledBuilding;
+                if (neighbor != null && neighbor.type == tile.type)
                     occupiedAxes.Add(axis);
-               }
             }
 
-            //change prefab type depending on occipied axes
             foreach (BuildTileDefinition t in tile.tiles)
             {
                 if (t.axes.Count == occupiedAxes.Count && new HashSet<Vector2Int>(t.axes).SetEquals(occupiedAxes))
@@ -286,36 +321,52 @@ public class GridPlacementNEW : MonoBehaviour
                     break;
                 }
             }
-            GameObject building = Instantiate(objectToPlace, currentPosition, orientation);
-            building.name = selected.displayName;
-
-            BuildingYield yield = building.GetComponent<BuildingYield>();
-            if (yield == null) yield = building.AddComponent<BuildingYield>();
-            yield.ApplyDefinition(selected);
-
-            occupiedCells.UnionWith(currentCells);
-            grid.SetBuilding(yield.Definition, currentCells, building);
-
-            foreach (Vector2Int axis in occupiedAxes)
-            {
-                UpdateBuildingTile(new Vector2Int(currentCells[0].x + axis.x, currentCells[0].z + axis.y));
-            }
         }
-        else
+
+        GameObject building = Instantiate(objectToPlace, worldPos, orientation);
+        building.name = definition.displayName;
+
+        BuildingYield yield = building.GetComponent<BuildingYield>();
+        if (yield == null) yield = building.AddComponent<BuildingYield>();
+        yield.ApplyDefinition(definition);
+
+        occupiedCells.UnionWith(cells);
+        grid.SetBuilding(yield.Definition, cells, building);
+
+        if (occupiedAxes != null)
         {
-            GameObject building = Instantiate(objectToPlace, currentPosition, orientation);
-            building.name = selected.displayName;
-
-            BuildingYield yield = building.GetComponent<BuildingYield>();
-            if (yield == null) yield = building.AddComponent<BuildingYield>();
-            yield.ApplyDefinition(selected);
-
-            occupiedCells.UnionWith(currentCells);
-            grid.SetBuilding(yield.Definition, currentCells, building);
-            
+            foreach (Vector2Int axis in occupiedAxes)
+                UpdateBuildingTile(new Vector2Int(cells[0].x + axis.x, cells[0].z + axis.y));
         }
-            
-        
+
+        return building;
+    }
+
+    float GetGroundHeight(Vector3 point)
+    {
+        var ray = new Ray(new Vector3(point.x, 500f, point.z), Vector3.down);
+        RaycastHit[] hits = Physics.RaycastAll(ray, 1000f, groundLayers, QueryTriggerInteraction.Ignore);
+        System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+        foreach (RaycastHit hit in hits)
+        {
+            if (hit.collider.GetComponentInParent<BuildingYield>() == null)
+                return hit.point.y;
+        }
+        return point.y;
+    }
+    void TryPlace()
+    {
+        if (!hasGroundUnderMouse || !currentCellValid) return;
+
+        GameObject placed = PlaceBuildingInCells(
+            selected,
+            currentCells,
+            currentPosition.y,
+            quarterTurns,
+            chargeResources: true,
+            force: false);
+
+        if (placed == null) return;
 
         bool canAffordAnother = resources == null || resources.CanAfford(selected.cost);
         if (!keepPlacingAfterBuild || !canAffordAnother) StopPlacing(true);
@@ -354,7 +405,7 @@ public class GridPlacementNEW : MonoBehaviour
         }
         if (newObject != null)
         {
-            
+
             GameObject oldObject = cell.gameobject;
             GameObject newInstance = Instantiate(newObject, oldObject.transform.position, newOrientation);
             newInstance.name = oldObject.name;
